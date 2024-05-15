@@ -1,4 +1,12 @@
 {
+  "cancel_button": "Cancel",
   "welcome_title": "Welcome to Super to-do app",
-  "welcome_description": "Please login to your account or create a new one to start using the app"
+  "welcome_description": "Please login to your account or create a new one to start using the app",
+  "create_category_page_title": "Create a new category",
+  "create_category_form_category_name_label": "Category name",
+  "create_category_form_category_name_hint": "Enter category name",
+  "create_category_form_category_icon_label": "Category icon",
+  "create_category_form_category_color_label": "Category color",
+  "create_category_form_choose_icon_button": "Choose icon from library",
+  "create_category_form_create_button": "Create category"
 }

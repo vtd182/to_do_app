@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:to_do_app/routes.dart';
-import 'package:to_do_app/ui/splash/splash.dart';
+import 'package:to_do_app/ui/category/create_or_edit_category.dart';
 
 void main() async {
   // init easy localization
@@ -20,6 +20,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.setLocale(const Locale('en'));
     return MaterialApp(
       title: 'My To-Do App',
       theme: ThemeData(
@@ -30,7 +31,7 @@ class MyApp extends StatelessWidget {
       locale: context.locale,
       supportedLocales: context.supportedLocales,
       routes: routes,
-      home: const SplashScreen(),
+      home: const CreateOrEditCategoryPage(),
       debugShowCheckedModeBanner: false,
     );
   }
