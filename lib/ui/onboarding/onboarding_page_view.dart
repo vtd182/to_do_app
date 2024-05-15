@@ -1,5 +1,6 @@
 // Parent class for navigation between onboarding pages
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:to_do_app/ui/welcome/welcome_page.dart';
 
 import '../../utils/enums/onboarding_page_position.dart';
@@ -32,7 +33,7 @@ class _OnboardingPageViewState extends State<OnboardingPageView> {
           OnboardingChildPage(
             onboardingPagePosition: OnboardingPagePosition.page1,
             onSkipPressed: () {
-              Navigator.of(context).pushNamed(WelcomePage.route);
+              _onSkipPressed();
             },
             onNextPressed: () {
               _pageController.jumpToPage(1);
@@ -44,7 +45,7 @@ class _OnboardingPageViewState extends State<OnboardingPageView> {
           OnboardingChildPage(
             onboardingPagePosition: OnboardingPagePosition.page2,
             onSkipPressed: () {
-              Navigator.of(context).pushNamed(WelcomePage.route);
+              _onSkipPressed();
             },
             onNextPressed: () {
               _pageController.jumpToPage(2);
@@ -56,10 +57,12 @@ class _OnboardingPageViewState extends State<OnboardingPageView> {
           OnboardingChildPage(
             onboardingPagePosition: OnboardingPagePosition.page3,
             onSkipPressed: () {
-              Navigator.of(context).pushNamed(WelcomePage.route);
+              _onSkipPressed();
             },
             onNextPressed: () {
-              Navigator.of(context).pushNamed(WelcomePage.route);
+              _makeOnboardingFinished();
+              Navigator.of(context)
+                  .pushNamed(WelcomePage.route, arguments: true);
             },
             onPreviousPressed: () {
               _pageController.jumpToPage(1);
@@ -68,5 +71,20 @@ class _OnboardingPageViewState extends State<OnboardingPageView> {
         ],
       ),
     );
+  }
+
+  Future<void> _makeOnboardingFinished() async {
+    try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('key_onboarding_finished', true);
+    } catch (e) {
+      print(e);
+      return;
+    }
+  }
+
+  void _onSkipPressed() {
+    _makeOnboardingFinished();
+    Navigator.of(context).pushNamed(WelcomePage.route, arguments: true);
   }
 }

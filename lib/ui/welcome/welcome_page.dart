@@ -1,8 +1,12 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+
+import '../login/login_page.dart';
 
 class WelcomePage extends StatelessWidget {
   static const route = '/welcome_page';
-  const WelcomePage({super.key});
+  final bool isFirstTime;
+  const WelcomePage({super.key, this.isFirstTime = false});
 
   @override
   Widget build(BuildContext context) {
@@ -10,16 +14,21 @@ class WelcomePage extends StatelessWidget {
       child: Scaffold(
         backgroundColor: Colors.black,
         appBar: AppBar(
+          automaticallyImplyLeading: false, // add this line
           backgroundColor: Colors.black,
-          leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(
-              Icons.arrow_back,
-              color: Colors.white,
-            ),
-          ),
+          leading: !isFirstTime
+              ? null
+              : IconButton(
+                  onPressed: () {
+                    if (Navigator.canPop(context)) {
+                      Navigator.pop(context);
+                    }
+                  },
+                  icon: const Icon(
+                    Icons.arrow_back,
+                    color: Colors.white,
+                  ),
+                ),
         ),
         body: Column(
           children: [
@@ -30,8 +39,9 @@ class WelcomePage extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    _buildLoginButton(),
-                    _buildRegisterButton(),
+                    _buildLoginButton(context),
+                    _buildRegisterButton(context),
+                    _buildChangeLanguageButton(context),
                   ],
                 ),
               ),
@@ -55,9 +65,10 @@ class WelcomePage extends StatelessWidget {
   }
 
   Widget _buildTextWelcome() {
-    return const Text(
-      'Welcome to UpToDo',
-      style: TextStyle(
+    return Text(
+      "welcome_title".tr(),
+      textAlign: TextAlign.center,
+      style: const TextStyle(
         color: Colors.white,
         fontSize: 32,
         fontWeight: FontWeight.bold,
@@ -67,10 +78,11 @@ class WelcomePage extends StatelessWidget {
 
   Widget _buildTextDescription() {
     return Container(
-      margin: const EdgeInsets.only(top: 10),
-      child: const Text(
-        'The best place to manage your daily tasks',
-        style: TextStyle(
+      margin: const EdgeInsets.only(top: 25, left: 20, right: 20),
+      child: Text(
+        "welcome_description".tr(),
+        textAlign: TextAlign.center,
+        style: const TextStyle(
           color: Colors.white,
           fontSize: 16,
         ),
@@ -78,14 +90,14 @@ class WelcomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildLoginButton() {
+  Widget _buildLoginButton(BuildContext context) {
     return Container(
         margin: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
         height: 48,
         width: double.infinity,
         child: ElevatedButton(
           onPressed: () {
-            print('Login');
+            Navigator.of(context).pushNamed(LoginPage.route);
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.deepPurple,
@@ -100,14 +112,14 @@ class WelcomePage extends StatelessWidget {
         ));
   }
 
-  Widget _buildRegisterButton() {
+  Widget _buildRegisterButton(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
       height: 48,
       width: double.infinity,
       child: ElevatedButton(
         onPressed: () {
-          print('Register');
+          Navigator.of(context).pushNamed(LoginPage.route);
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.transparent,
@@ -121,6 +133,39 @@ class WelcomePage extends StatelessWidget {
         ),
         child: const Text(
           'CREATE ACCOUNT',
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildChangeLanguageButton(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+      height: 48,
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: () {
+          // change language
+          final currentLocale = context.locale;
+          if (currentLocale == const Locale('en')) {
+            context.setLocale(const Locale('vi'));
+          } else {
+            context.setLocale(const Locale('en'));
+          }
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.transparent,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(4)),
+            side: BorderSide(
+              color: Colors.deepPurple,
+              width: 1,
+            ),
+          ),
+        ),
+        child: const Text(
+          'Change language',
           style: TextStyle(color: Colors.white),
         ),
       ),
