@@ -1,5 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:to_do_app/ui/profile/profile_page.dart';
 
 class MainPage extends StatefulWidget {
   static const route = '/main_page';
@@ -28,9 +28,7 @@ class _MainPageState extends State<MainPage> {
       Container(
         color: Colors.yellow,
       ),
-      Container(
-        color: Colors.pink,
-      ),
+      const ProfilePage(),
     ];
     super.initState();
   }
@@ -89,8 +87,6 @@ class _MainPageState extends State<MainPage> {
         child: IconButton(
           onPressed: () {
             print('Add');
-            // logout firebase
-            FirebaseAuth.instance.signOut();
           },
           icon: const Icon(
             Icons.add,
