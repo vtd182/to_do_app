@@ -1,5 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:to_do_app/ui/register/register_page.dart';
 
 import '../login/login_page.dart';
 
@@ -119,7 +121,7 @@ class WelcomePage extends StatelessWidget {
       width: double.infinity,
       child: ElevatedButton(
         onPressed: () {
-          Navigator.of(context).pushNamed(LoginPage.route);
+          Navigator.of(context).pushNamed(RegisterPage.route);
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.transparent,
@@ -146,6 +148,7 @@ class WelcomePage extends StatelessWidget {
       width: double.infinity,
       child: ElevatedButton(
         onPressed: () {
+          FirebaseAuth.instance.signOut();
           // change language
           final currentLocale = context.locale;
           if (currentLocale == const Locale('en')) {

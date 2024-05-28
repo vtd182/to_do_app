@@ -1,17 +1,15 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:to_do_app/ui/register/bloc/register_cubit.dart';
 
+import '../../domain/authentication_repository/authentication_repository.dart';
 import '../login/login_page.dart';
 
-class RegisterPage extends StatefulWidget {
+class RegisterPage extends StatelessWidget {
   static const route = '/register_page';
   const RegisterPage({super.key});
 
-  @override
-  State<RegisterPage> createState() => _RegisterPageState();
-}
-
-class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,7 +26,36 @@ class _RegisterPageState extends State<RegisterPage> {
           ),
         ),
       ),
-      body: SingleChildScrollView(
+      body: BlocProvider(
+        create: (context) {
+          final authenticationRepository =
+              context.read<AuthenticationRepository>();
+          return RegisterCubit(
+            authenticationRepository: authenticationRepository,
+          );
+        },
+        child: const RegisterPageView(),
+      ),
+    );
+  }
+}
+
+class RegisterPageView extends StatefulWidget {
+  const RegisterPageView({super.key});
+
+  @override
+  State<RegisterPageView> createState() => _RegisterPageViewState();
+}
+
+class _RegisterPageViewState extends State<RegisterPageView> {
+  final _emailTextController = TextEditingController();
+  final _passwordTextController = TextEditingController();
+  final _confirmPasswordTextController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: SingleChildScrollView(
         child: Container(
           margin: const EdgeInsets.all(20),
           child: Column(
@@ -85,6 +112,7 @@ class _RegisterPageState extends State<RegisterPage> {
           Container(
             margin: const EdgeInsets.only(top: 10),
             child: TextFormField(
+              controller: _emailTextController,
               style: const TextStyle(
                 color: Colors.white,
               ),
@@ -124,6 +152,7 @@ class _RegisterPageState extends State<RegisterPage> {
           Container(
             margin: const EdgeInsets.only(top: 10),
             child: TextFormField(
+              controller: _passwordTextController,
               obscureText: true,
               style: const TextStyle(
                 color: Colors.white,
@@ -164,6 +193,7 @@ class _RegisterPageState extends State<RegisterPage> {
           Container(
             margin: const EdgeInsets.only(top: 10),
             child: TextFormField(
+              controller: _confirmPasswordTextController,
               obscureText: true,
               style: const TextStyle(
                 color: Colors.white,
@@ -194,7 +224,7 @@ class _RegisterPageState extends State<RegisterPage> {
         width: double.infinity,
         child: ElevatedButton(
           onPressed: () {
-            print('Login');
+            _register();
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.deepPurple,
@@ -312,5 +342,16 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
       ],
     ));
+  }
+
+  void _register() {
+    final email = _emailTextController.text;
+    final password = _passwordTextController.text;
+    final confirmPassword = _confirmPasswordTextController.text;
+    if (password != confirmPassword) {
+      print('Password and confirm password are not the same');
+      return;
+    }
+    context.read<RegisterCubit>().register(email, password);
   }
 }

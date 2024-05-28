@@ -1,17 +1,15 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../domain/authentication_repository/authentication_repository.dart';
 import '../register/register_page.dart';
+import 'bloc/login_cubit.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginPage extends StatelessWidget {
   static const route = '/login_page';
   const LoginPage({super.key});
 
-  @override
-  State<LoginPage> createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,7 +26,34 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
       ),
-      body: SingleChildScrollView(
+      body: BlocProvider(
+        create: (context) {
+          final authenticationRepository =
+              context.read<AuthenticationRepository>();
+          return LoginCubit(
+            authenticationRepository: authenticationRepository,
+          );
+        },
+        child: const LoginPageView(),
+      ),
+    );
+  }
+}
+
+class LoginPageView extends StatefulWidget {
+  const LoginPageView({super.key});
+  @override
+  State<LoginPageView> createState() => _LoginPageViewState();
+}
+
+class _LoginPageViewState extends State<LoginPageView> {
+  final _emailTextController = TextEditingController();
+  final _passwordTextController = TextEditingController();
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      top: false,
+      child: SingleChildScrollView(
         child: Container(
           margin: const EdgeInsets.all(20),
           child: Column(
@@ -82,6 +107,7 @@ class _LoginPageState extends State<LoginPage> {
           Container(
             margin: const EdgeInsets.only(top: 10),
             child: TextFormField(
+              controller: _emailTextController,
               style: const TextStyle(
                 color: Colors.white,
               ),
@@ -121,6 +147,7 @@ class _LoginPageState extends State<LoginPage> {
           Container(
             margin: const EdgeInsets.only(top: 10),
             child: TextFormField(
+              controller: _passwordTextController,
               obscureText: true,
               style: const TextStyle(
                 color: Colors.white,
@@ -151,7 +178,7 @@ class _LoginPageState extends State<LoginPage> {
         width: double.infinity,
         child: ElevatedButton(
           onPressed: () {
-            print('Login');
+            _login();
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.deepPurple,
@@ -292,5 +319,13 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ],
     ));
+  }
+
+  void _login() {
+    // TODO: validate email and password
+    print('Login');
+    final email = _emailTextController.text;
+    final password = _passwordTextController.text;
+    context.read<LoginCubit>().login(email, password);
   }
 }

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "568100634875",
+    "project_id": "supertodoapp-65f94",
+    "storage_bucket": "supertodoapp-65f94.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:568100634875:android:af85a8f63b74616d84705e",
+        "android_client_info": {
+          "package_name": "com.example.to_do_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCNEnldUsV_7X9ypF_qtsW6K6UAduDLfUg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,5 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 
 class CreateOrEditCategoryPage extends StatefulWidget {
   const CreateOrEditCategoryPage({super.key});
@@ -12,7 +14,9 @@ class CreateOrEditCategoryPage extends StatefulWidget {
 class _CreateOrEditCategoryPageState extends State<CreateOrEditCategoryPage> {
   final _nameCategoryTextController = TextEditingController();
   List<Color> _colorsDataSource = [];
-  Color? _selectedColor;
+  Color _selectedBackgroundColor = Colors.white;
+  Color _selectedIconColor = Colors.white;
+  IconData? _selectedIcon;
 
   @override
   void initState() {
@@ -59,10 +63,14 @@ class _CreateOrEditCategoryPageState extends State<CreateOrEditCategoryPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildCategoryNameField(),
-          const SizedBox(height: 30),
-          _buildCategoryChooseIconField(),
-          const SizedBox(height: 30),
-          _buildCategoryChooseBackgroundColorField(),
+          const SizedBox(height: 20),
+          _buildCategoryChooseIconButton(),
+          const SizedBox(height: 20),
+          _buildCategoryChooseBackgroundColorWithColorPicker(),
+          const SizedBox(height: 20),
+          _buildCategoryChooseIconColorWithColorPicker(),
+          const SizedBox(height: 20),
+          _buildPreviewCategory(),
           Expanded(
             child: Align(
               alignment: Alignment.bottomCenter,
@@ -101,12 +109,15 @@ class _CreateOrEditCategoryPageState extends State<CreateOrEditCategoryPage> {
                   color: Colors.white.withOpacity(0.5),
                 ),
               ),
+              onChanged: (value) {
+                setState(() {});
+              },
             ),
           ),
         ]);
   }
 
-  Widget _buildCategoryChooseIconField() {
+  Widget _buildCategoryChooseIconButton() {
     return Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -115,20 +126,28 @@ class _CreateOrEditCategoryPageState extends State<CreateOrEditCategoryPage> {
           Container(
             margin: const EdgeInsets.only(top: 10),
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                _chooseIcon();
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.grey.withOpacity(0.5),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5),
                 ),
               ),
-              child: Text(
-                "create_category_form_choose_icon_button".tr(),
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.white,
-                ),
-              ),
+              child: _selectedIcon == null
+                  ? Text(
+                      "create_category_form_choose_icon_button".tr(),
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                      ),
+                    )
+                  : Icon(
+                      size: 35,
+                      _selectedIcon,
+                      color: Colors.white,
+                    ),
             ),
           ),
         ]);
@@ -151,9 +170,8 @@ class _CreateOrEditCategoryPageState extends State<CreateOrEditCategoryPage> {
                 return GestureDetector(
                   onTap: () {
                     setState(() {
-                      _selectedColor = color;
+                      _selectedBackgroundColor = color;
                     });
-                    print("Color: $color");
                   },
                   child: Container(
                     margin: const EdgeInsets.only(right: 12),
@@ -163,7 +181,7 @@ class _CreateOrEditCategoryPageState extends State<CreateOrEditCategoryPage> {
                       borderRadius: BorderRadius.circular(18),
                       color: color,
                     ),
-                    child: _selectedColor != color
+                    child: _selectedBackgroundColor != color
                         ? null
                         : const Icon(
                             Icons.check,
@@ -177,6 +195,91 @@ class _CreateOrEditCategoryPageState extends State<CreateOrEditCategoryPage> {
             ),
           ),
         ]);
+  }
+
+  Widget _buildCategoryChooseBackgroundColorWithColorPicker() {
+    return Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildFieldTitle("create_category_form_category_color_label".tr()),
+          Container(
+            margin: const EdgeInsets.only(top: 10),
+            child: CircleAvatar(
+              backgroundColor: _selectedBackgroundColor,
+              radius: 18,
+              child: IconButton(
+                onPressed: () {
+                  _onChooseCategoryBackgroundColor();
+                },
+                icon: Container(),
+              ),
+            ),
+          ),
+        ]);
+  }
+
+  Widget _buildCategoryChooseIconColorWithColorPicker() {
+    return Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildFieldTitle(
+              "create_category_form_category_icon_color_label".tr()),
+          Container(
+            margin: const EdgeInsets.only(top: 10),
+            child: CircleAvatar(
+              backgroundColor: _selectedIconColor,
+              radius: 18,
+              child: IconButton(
+                onPressed: () {
+                  _onChooseIconColor();
+                },
+                icon: Container(),
+              ),
+            ),
+          ),
+        ]);
+  }
+
+  Widget _buildPreviewCategory() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildFieldTitle("create_category_form_category_preview_label".tr()),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              margin: const EdgeInsets.only(top: 10),
+              child: Container(
+                width: 64,
+                height: 64,
+                decoration: BoxDecoration(
+                  color: _selectedBackgroundColor,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Icon(
+                  _selectedIcon,
+                  color: _selectedIconColor,
+                  size: 40,
+                ),
+              ),
+            ),
+            Text(
+              _nameCategoryTextController.text,
+              style: const TextStyle(
+                fontSize: 14,
+                color: Colors.white,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ],
+    );
   }
 
   Widget _buildFieldTitle(String title) {
@@ -230,6 +333,85 @@ class _CreateOrEditCategoryPageState extends State<CreateOrEditCategoryPage> {
     );
   }
 
+  void _chooseIcon() async {
+    IconData? icon = await showIconPicker(context, iconPackModes: [
+      IconPack.material,
+    ]);
+    setState(() {
+      _selectedIcon = icon;
+    });
+  }
+
+  void _onChooseCategoryBackgroundColor() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("create_category_form_category_color_label".tr()),
+          content: SingleChildScrollView(
+            child: ColorPicker(
+              pickerColor: _selectedBackgroundColor,
+              onColorChanged: (color) {
+                setState(() {
+                  _selectedBackgroundColor = color;
+                });
+              },
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("cancel_button".tr()),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("ok_button".tr()),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _onChooseIconColor() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("create_category_form_category_color_label".tr()),
+          content: SingleChildScrollView(
+            child: ColorPicker(
+              pickerColor: _selectedIconColor,
+              onColorChanged: (color) {
+                setState(() {
+                  _selectedIconColor = color;
+                });
+              },
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("cancel_button".tr()),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("ok_button".tr()),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _onHandleCreateCategory() {
     final name = _nameCategoryTextController.text;
     if (name.isEmpty) {
@@ -240,7 +422,7 @@ class _CreateOrEditCategoryPageState extends State<CreateOrEditCategoryPage> {
       );
       return;
     }
-    if (_selectedColor == null) {
+    if (_selectedBackgroundColor == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text("create_category_form_category_color_empty".tr()),
@@ -250,7 +432,7 @@ class _CreateOrEditCategoryPageState extends State<CreateOrEditCategoryPage> {
     }
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(name + " - " + _selectedColor.toString()),
+        content: Text(name + " - " + _selectedBackgroundColor.toString()),
       ),
     );
   }

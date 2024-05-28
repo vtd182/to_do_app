@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class MainPage extends StatefulWidget {
@@ -88,6 +89,8 @@ class _MainPageState extends State<MainPage> {
         child: IconButton(
           onPressed: () {
             print('Add');
+            // logout firebase
+            FirebaseAuth.instance.signOut();
           },
           icon: const Icon(
             Icons.add,
