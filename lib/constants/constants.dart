@@ -18,4 +18,11 @@ class Constants {
   static String helpAndFeedbackIcon = "assets/images/ic_help_and_feedback.png";
   static String buyMeACoffeeIcon = "assets/images/ic_buy_me_a_coffee.png";
   static String importIcon = "assets/images/ic_import.png";
+  static String closeIcon = "assets/images/ic_close.png";
+  static String deleteIcon = "assets/images/ic_delete.png";
+  static String editIcon = "assets/images/ic_edit.png";
+  static String subTaskIcon = "assets/images/ic_sub_task.png";
+  static String taskCategoryIcon = "assets/images/ic_task_category.png";
+  static String taskPriorityIcon = "assets/images/ic_task_priority.png";
+  static String taskTimeIcon = "assets/images/ic_task_time.png";
 }
