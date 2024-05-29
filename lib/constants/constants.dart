@@ -17,4 +17,5 @@ class Constants {
   static String aboutUsIcon = "assets/images/ic_about_us.png";
   static String helpAndFeedbackIcon = "assets/images/ic_help_and_feedback.png";
   static String buyMeACoffeeIcon = "assets/images/ic_buy_me_a_coffee.png";
+  static String importIcon = "assets/images/ic_import.png";
 }

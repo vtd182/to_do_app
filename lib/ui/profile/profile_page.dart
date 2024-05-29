@@ -1,6 +1,8 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:to_do_app/constants/constants.dart';
+import 'package:to_do_app/ui/setting/setting_page.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -15,7 +17,7 @@ class _ProfilePageState extends State<ProfilePage> {
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const Text('Profile'),
+        title: Text("profile_text".tr()),
         titleTextStyle: const TextStyle(
           fontSize: 20,
           color: Colors.white,
@@ -30,20 +32,23 @@ class _ProfilePageState extends State<ProfilePage> {
                 _buildAvatar(),
                 const SizedBox(height: 5),
                 _buildCountTask(),
-                _buildTextTitle("Settings"),
-                _buildOptionButton("App settings", Constants.settingIcon),
-                _buildTextTitle("Account"),
+                _buildTextTitle("setting_text".tr()),
                 _buildOptionButton(
-                    "Change account name", Constants.profileIcon),
-                _buildOptionButton("Change password", Constants.passwordIcon),
-                _buildOptionButton("Change account photo", Constants.photoIcon),
+                    "app_settings_text".tr(), Constants.settingIcon),
+                _buildTextTitle("account_text".tr()),
+                _buildOptionButton(
+                    "change_account_name_text".tr(), Constants.profileIcon),
+                _buildOptionButton(
+                    "change_password_text".tr(), Constants.passwordIcon),
+                _buildOptionButton(
+                    "change_account_photo_text".tr(), Constants.photoIcon),
                 _buildTextTitle("Super todo"),
-                _buildOptionButton("About us", Constants.aboutUsIcon),
-                _buildOptionButton("FAQ", Constants.faqIcon),
+                _buildOptionButton("about_us_text".tr(), Constants.aboutUsIcon),
+                _buildOptionButton("faq_text".tr(), Constants.faqIcon),
+                _buildOptionButton("help_and_feedback_text".tr(),
+                    Constants.helpAndFeedbackIcon),
                 _buildOptionButton(
-                    "Help & Feedback", Constants.helpAndFeedbackIcon),
-                _buildOptionButton(
-                    "Buy me a coffee", Constants.buyMeACoffeeIcon),
+                    "buy_me_a_coffee_text".tr(), Constants.buyMeACoffeeIcon),
                 _buildLogoutButton(),
                 const SizedBox(height: 20),
               ],
@@ -56,36 +61,39 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget _buildOptionButton(String title, String icon) {
     return GestureDetector(
-        onTap: () {
-          print(title);
-        },
-        child: Container(
-          margin: const EdgeInsets.only(top: 10, bottom: 10),
-          child: Row(
-            children: [
-              Container(
-                margin: const EdgeInsets.only(right: 10),
-                child: Image.asset(
-                  icon,
-                  width: 24,
-                  height: 24,
-                ),
+      onTap: () {
+        if (icon == Constants.settingIcon) {
+          Navigator.of(context).pushNamed(SettingPage.route);
+        }
+      },
+      child: Container(
+        margin: const EdgeInsets.only(top: 10, bottom: 10),
+        child: Row(
+          children: [
+            Container(
+              margin: const EdgeInsets.only(right: 10),
+              child: Image.asset(
+                icon,
+                width: 24,
+                height: 24,
               ),
-              Text(
-                title,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                ),
-              ),
-              const Spacer(),
-              const Icon(
-                Icons.chevron_right,
+            ),
+            Text(
+              title,
+              style: const TextStyle(
                 color: Colors.white,
+                fontSize: 16,
               ),
-            ],
-          ),
-        ));
+            ),
+            const Spacer(),
+            const Icon(
+              Icons.chevron_right,
+              color: Colors.white,
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildLogoutButton() {
@@ -105,9 +113,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 height: 24,
               ),
             ),
-            const Text(
-              "Logout",
-              style: TextStyle(
+            Text(
+              "logout_text".tr(),
+              style: const TextStyle(
                 color: Colors.red,
                 fontSize: 16,
               ),

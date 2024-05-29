@@ -74,7 +74,6 @@ class _MyAppState extends State<MyApp> {
   final _navigatorKey = GlobalKey<NavigatorState>();
   @override
   Widget build(BuildContext context) {
-    context.setLocale(const Locale('en'));
     return MaterialApp(
       title: 'My To-Do App',
       theme: ThemeData(
@@ -90,7 +89,6 @@ class _MyAppState extends State<MyApp> {
       builder: (context, child) {
         return BlocListener<AppCubit, AppState>(
           listener: (context, state) {
-            print(state.status);
             switch (state.status) {
               case AuthenticationStatus.authenticated:
                 _navigatorKey.currentState

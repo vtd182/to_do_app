@@ -1,5 +1,10 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:to_do_app/ui/calendar/calendar_page.dart';
+import 'package:to_do_app/ui/home/home_page.dart';
 import 'package:to_do_app/ui/profile/profile_page.dart';
+
+import '../focus/focus_page.dart';
 
 class MainPage extends StatefulWidget {
   static const route = '/main_page';
@@ -16,18 +21,12 @@ class _MainPageState extends State<MainPage> {
   @override
   initState() {
     _page = [
-      Container(
-        color: Colors.red,
-      ),
-      Container(
-        color: Colors.green,
-      ),
+      const HomePage(),
+      const CalendarPage(),
       Container(
         color: Colors.blue,
       ),
-      Container(
-        color: Colors.yellow,
-      ),
+      const FocusPage(),
       const ProfilePage(),
     ];
     super.initState();
@@ -50,14 +49,14 @@ class _MainPageState extends State<MainPage> {
           });
         },
         items: [
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.home, color: Colors.white),
-            label: 'Home',
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.home, color: Colors.white),
+            label: "home_text".tr(),
             backgroundColor: Colors.transparent,
           ),
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_month, color: Colors.white),
-            label: 'Calendar',
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.calendar_month, color: Colors.white),
+            label: 'calendar_text'.tr(),
             backgroundColor: Colors.transparent,
           ),
           BottomNavigationBarItem(
@@ -65,14 +64,14 @@ class _MainPageState extends State<MainPage> {
             label: '',
             backgroundColor: Colors.transparent,
           ),
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.timeline, color: Colors.white),
-            label: 'Focus',
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.timeline, color: Colors.white),
+            label: 'focus_text'.tr(),
             backgroundColor: Colors.transparent,
           ),
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.person, color: Colors.white),
-            label: 'Profile',
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.person, color: Colors.white),
+            label: "profile_text".tr(),
             backgroundColor: Colors.transparent,
           ),
         ],

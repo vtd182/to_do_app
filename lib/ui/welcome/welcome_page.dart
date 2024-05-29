@@ -43,7 +43,6 @@ class WelcomePage extends StatelessWidget {
                   children: [
                     _buildLoginButton(context),
                     _buildRegisterButton(context),
-                    _buildChangeLanguageButton(context),
                   ],
                 ),
               ),
