@@ -69,6 +69,7 @@ class _ProfilePageState extends State<ProfilePage> {
       child: Container(
         margin: const EdgeInsets.only(top: 10, bottom: 10),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
               margin: const EdgeInsets.only(right: 10),
@@ -196,7 +197,7 @@ class _ProfilePageState extends State<ProfilePage> {
             textAlign: TextAlign.center,
             "5 Task Done",
             style: TextStyle(
-              fontSize: 15,
+              fontSize: 16,
               color: Colors.white,
             ),
           ),

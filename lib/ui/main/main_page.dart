@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:to_do_app/ui/calendar/calendar_page.dart';
 import 'package:to_do_app/ui/home/home_page.dart';
 import 'package:to_do_app/ui/profile/profile_page.dart';
+import 'package:to_do_app/ui/task/create_task_page.dart';
 
 import '../focus/focus_page.dart';
 
@@ -85,7 +86,7 @@ class _MainPageState extends State<MainPage> {
         ),
         child: IconButton(
           onPressed: () {
-            print('Add');
+            _onShowCreateTask();
           },
           icon: const Icon(
             Icons.add,
@@ -94,6 +95,19 @@ class _MainPageState extends State<MainPage> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+    );
+  }
+
+  void _onShowCreateTask() {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      context: context,
+      builder: (context) {
+        return Padding(
+          padding: MediaQuery.of(context).viewInsets,
+          child: const CreateTaskPage(),
+        );
+      },
     );
   }
 }

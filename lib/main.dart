@@ -5,7 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:to_do_app/domain/authentication_repository/authentication_repository.dart';
 import 'package:to_do_app/domain/data_source/firebase_auth_service.dart';
 import 'package:to_do_app/routes.dart';
-import 'package:to_do_app/ui/category/create_or_edit_category.dart';
+import 'package:to_do_app/ui/main/main_page.dart';
+import 'package:to_do_app/ui/splash/splash.dart';
+import 'package:to_do_app/ui/welcome/welcome_page.dart';
+import 'package:to_do_app/utils/enums/authentication_status.dart';
 
 import 'app/app_cubit.dart';
 
@@ -83,29 +86,29 @@ class _MyAppState extends State<MyApp> {
       locale: context.locale,
       supportedLocales: context.supportedLocales,
       routes: routes,
-      // builder: (context, child) {
-      //   return BlocListener<AppCubit, AppState>(
-      //     listener: (context, state) {
-      //       switch (state.status) {
-      //         case AuthenticationStatus.authenticated:
-      //           _navigatorKey.currentState
-      //               ?.pushNamedAndRemoveUntil(MainPage.route, (route) => false);
-      //           break;
-      //         case AuthenticationStatus.unauthenticated:
-      //           _navigatorKey.currentState?.pushNamedAndRemoveUntil(
-      //               WelcomePage.route, (route) => false,
-      //               arguments: false);
-      //           break;
-      //         case AuthenticationStatus.unknown:
-      //           break;
-      //       }
-      //     },
-      //     child: child,
-      //   );
-      // },
-      // onGenerateRoute: (_) =>
-      //     MaterialPageRoute(builder: (context) => const SplashScreen()),
-      home: const CreateOrEditCategoryPage(),
+      builder: (context, child) {
+        return BlocListener<AppCubit, AppState>(
+          listener: (context, state) {
+            switch (state.status) {
+              case AuthenticationStatus.authenticated:
+                _navigatorKey.currentState
+                    ?.pushNamedAndRemoveUntil(MainPage.route, (route) => false);
+                break;
+              case AuthenticationStatus.unauthenticated:
+                _navigatorKey.currentState?.pushNamedAndRemoveUntil(
+                    WelcomePage.route, (route) => false,
+                    arguments: false);
+                break;
+              case AuthenticationStatus.unknown:
+                break;
+            }
+          },
+          child: child,
+        );
+      },
+      onGenerateRoute: (_) =>
+          MaterialPageRoute(builder: (context) => const SplashScreen()),
+      // home: const CreateOrEditCategoryPage(),
       debugShowCheckedModeBanner: false,
     );
   }

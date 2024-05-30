@@ -76,6 +76,7 @@ class _SettingPageState extends State<SettingPage> {
       child: Container(
         margin: const EdgeInsets.only(top: 10, bottom: 10),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
               margin: const EdgeInsets.only(right: 10),
@@ -145,7 +146,6 @@ class _SettingPageState extends State<SettingPage> {
 
   void _changeLanguage(String languageCode) {
     Navigator.of(context).pop();
-    print('Language changed to $languageCode');
     if (languageCode == 'en') {
       context.setLocale(const Locale('en'));
     } else {

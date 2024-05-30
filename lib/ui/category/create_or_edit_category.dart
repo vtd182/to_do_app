@@ -35,6 +35,8 @@ class _CreateOrEditCategoryPageState extends State<CreateOrEditCategoryPage> {
     ];
   }
 
+  // Category class: categoryId, name, icon, background color, icon color
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

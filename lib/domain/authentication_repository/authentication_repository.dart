@@ -31,7 +31,6 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
     required this.firebaseAuthService,
   }) {
     firebaseAuthService.user.listen((firebaseUser) {
-      print('firebaseUser: $firebaseUser');
       final isAuthenticated = firebaseUser != null;
       final user =
           isAuthenticated ? firebaseUser.toUserEntity : UserEntity.empty;

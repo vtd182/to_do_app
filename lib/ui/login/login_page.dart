@@ -112,7 +112,7 @@ class _LoginPageViewState extends State<LoginPageView> {
                 color: Colors.white,
               ),
               decoration: InputDecoration(
-                hintText: 'Enter your password',
+                hintText: 'Enter your username',
                 hintStyle: TextStyle(
                   color: Colors.white.withOpacity(0.5),
                   fontSize: 16,
