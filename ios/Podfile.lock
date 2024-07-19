@@ -7,7 +7,7 @@ PODS:
   - Firebase/Database (10.25.0):
     - Firebase/CoreOnly
     - FirebaseDatabase (~> 10.25.0)
-  - firebase_auth (4.19.5):
+  - firebase_auth (4.20.0):
     - Firebase/Auth (= 10.25.0)
     - firebase_core
     - Flutter
@@ -68,7 +68,7 @@ PODS:
   - GTMSessionFetcher/Core (3.4.1)
   - leveldb-library (1.22.5)
   - PromisesObjC (2.4.0)
-  - realm (2.2.1):
+  - realm (2.3.0):
     - Flutter
   - RecaptchaInterop (100.0.0)
   - shared_preferences_foundation (0.0.1):
@@ -114,7 +114,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Firebase: 0312a2352584f782ea56f66d91606891d4607f06
-  firebase_auth: 76ea642e91a9e914b3af751a416046ce1a965cf4
+  firebase_auth: 5719ddc9f654b813405899480e84971bd8e61235
   firebase_core: a626d00494efa398e7c54f25f1454a64c8abf197
   firebase_database: 2713033e426b176d4fe5e7195f3d19aa1b549a91
   FirebaseAppCheckInterop: 5da5ce93e8797a215e3f677fb0654b74e736c8b8
@@ -128,7 +128,7 @@ SPEC CHECKSUMS:
   GTMSessionFetcher: 8000756fc1c19d2e5697b90311f7832d2e33f6cd
   leveldb-library: e8eadf9008a61f9e1dde3978c086d2b6d9b9dc28
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
-  realm: c67db864de1f4c3f2bd48943ed1f6e59847c4f2b
+  realm: 95628af2ebc0becf2ff702c565b2d9acda57c22a
   RecaptchaInterop: 7d1a4a01a6b2cb1610a47ef3f85f0c411434cb21
   shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78
 

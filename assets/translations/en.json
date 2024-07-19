@@ -1,6 +1,7 @@
 {
   "ok_button": "OK",
   "cancel_button": "Cancel",
+  "save_button": "Save",
   "welcome_title": "Welcome to Super to-do app",
   "welcome_description": "Please login to your account or create a new one to start using the app",
   "create_category_page_title": "Create a new category",
@@ -12,6 +13,8 @@
   "create_category_form_category_preview_label": "Category preview",
   "create_category_form_choose_icon_button": "Choose icon from library",
   "create_category_form_create_button": "Create category",
+  "create_category_form_category_name_empty": "Category name cannot be empty",
+  "edit_category_page_title":"Edit category",
 
   "home_text": "Home",
   "calendar_text": "Calendar",

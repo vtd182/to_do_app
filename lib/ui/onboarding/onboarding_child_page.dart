@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:to_do_app/utils/enums/onboarding_page_position.dart';
 
+import '../../constants/constants.dart';
+
 class OnboardingChildPage extends StatelessWidget {
   final OnboardingPagePosition onboardingPagePosition;
   final VoidCallback onSkipPressed;
@@ -173,7 +175,7 @@ class OnboardingChildPage extends StatelessWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(2),
               ),
-              backgroundColor: Colors.deepPurple,
+              backgroundColor: Color(Constants.primaryColor),
             ),
             onPressed: () {
               onNextPressed.call();

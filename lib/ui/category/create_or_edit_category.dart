@@ -3,8 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 
+import '../../constants/constants.dart';
+import '../../data/models/category.dart';
+import '../../domain/data_source/firebase_service.dart';
+
 class CreateOrEditCategoryPage extends StatefulWidget {
-  const CreateOrEditCategoryPage({super.key});
+  static const route = '/create_or_edit_category_page';
+  String? categoryId;
+
+  CreateOrEditCategoryPage({super.key, this.categoryId});
 
   @override
   State<CreateOrEditCategoryPage> createState() =>
@@ -13,29 +20,21 @@ class CreateOrEditCategoryPage extends StatefulWidget {
 
 class _CreateOrEditCategoryPageState extends State<CreateOrEditCategoryPage> {
   final _nameCategoryTextController = TextEditingController();
-  List<Color> _colorsDataSource = [];
   Color _selectedBackgroundColor = Colors.white;
   Color _selectedIconColor = Colors.white;
   IconData? _selectedIcon;
+  bool get _isEditing => widget.categoryId != null;
+  CategoryModel? _category;
 
   @override
   void initState() {
     super.initState();
-    _colorsDataSource = [
-      Colors.red,
-      Colors.green,
-      Colors.blue,
-      Colors.yellow,
-      Colors.purple,
-      Colors.orange,
-      Colors.pink,
-      Colors.teal,
-      Colors.indigo,
-      Colors.cyan,
-    ];
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (_isEditing) {
+        _findCategoryToEdit(widget.categoryId!);
+      }
+    });
   }
-
-  // Category class: categoryId, name, icon, background color, icon color
 
   @override
   Widget build(BuildContext context) {
@@ -44,9 +43,11 @@ class _CreateOrEditCategoryPageState extends State<CreateOrEditCategoryPage> {
       appBar: AppBar(
         centerTitle: false,
         backgroundColor: Colors.transparent,
-        title: const Text(
-          "create_category_page_title",
-          style: TextStyle(
+        title: Text(
+          _isEditing
+              ? "edit_category_page_title".tr()
+              : "create_category_page_title".tr(),
+          style: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
             color: Colors.white,
@@ -101,8 +102,8 @@ class _CreateOrEditCategoryPageState extends State<CreateOrEditCategoryPage> {
               decoration: InputDecoration(
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(5),
-                  borderSide: const BorderSide(
-                    color: Colors.deepPurple,
+                  borderSide: BorderSide(
+                    color: Color(Constants.primaryColor),
                   ),
                 ),
                 hintText: "create_category_form_category_name_hint".tr(),
@@ -150,50 +151,6 @@ class _CreateOrEditCategoryPageState extends State<CreateOrEditCategoryPage> {
                       _selectedIcon,
                       color: Colors.white,
                     ),
-            ),
-          ),
-        ]);
-  }
-
-  Widget _buildCategoryChooseBackgroundColorField() {
-    return Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildFieldTitle("create_category_form_category_color_label".tr()),
-          Container(
-            margin: const EdgeInsets.only(top: 10),
-            width: double.infinity,
-            height: 36,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) {
-                final color = _colorsDataSource.elementAt(index);
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _selectedBackgroundColor = color;
-                    });
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.only(right: 12),
-                    width: 36,
-                    height: 36,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(18),
-                      color: color,
-                    ),
-                    child: _selectedBackgroundColor != color
-                        ? null
-                        : const Icon(
-                            Icons.check,
-                            color: Colors.white,
-                            size: 20,
-                          ),
-                  ),
-                );
-              },
-              itemCount: _colorsDataSource.length,
             ),
           ),
         ]);
@@ -300,33 +257,50 @@ class _CreateOrEditCategoryPageState extends State<CreateOrEditCategoryPage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          TextButton(
-            onPressed: () {},
-            child: Text(
-              "cancel_button".tr().toUpperCase(),
-              style: TextStyle(
-                fontSize: 16,
-                fontFamily: 'Late',
-                color: Colors.white.withOpacity(0.8),
+          Expanded(
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 15),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                backgroundColor: Colors.transparent,
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text(
+                "cancel_button".tr(),
+                style: TextStyle(
+                  fontSize: 16,
+                  fontFamily: 'Late',
+                  color: Color(Constants.primaryColor),
+                ),
               ),
             ),
           ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(4),
+          const SizedBox(width: 5),
+          Expanded(
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 15),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                backgroundColor: Color(Constants.primaryColor),
               ),
-              backgroundColor: Colors.deepPurple,
-            ),
-            onPressed: () {
-              _onHandleCreateCategory();
-            },
-            child: Text(
-              "create_category_form_create_button".tr().toUpperCase(),
-              style: TextStyle(
-                fontSize: 16,
-                fontFamily: 'Late',
-                color: Colors.white.withOpacity(0.8),
+              onPressed: () {
+                _isEditing ? _onUpdateCategory() : _onHandleCreateCategory();
+              },
+              child: Text(
+                _isEditing
+                    ? "save_button".tr()
+                    : "create_category_form_create_button".tr(),
+                style: TextStyle(
+                  fontSize: 16,
+                  fontFamily: 'Late',
+                  color: Colors.white.withOpacity(0.8),
+                ),
               ),
             ),
           ),
@@ -337,7 +311,7 @@ class _CreateOrEditCategoryPageState extends State<CreateOrEditCategoryPage> {
 
   void _chooseIcon() async {
     IconData? icon = await showIconPicker(context, iconPackModes: [
-      IconPack.material,
+      IconPack.allMaterial,
     ]);
     setState(() {
       _selectedIcon = icon;
@@ -414,6 +388,28 @@ class _CreateOrEditCategoryPageState extends State<CreateOrEditCategoryPage> {
     );
   }
 
+  void _onUpdateCategory() {
+    _category?.icon = _selectedIcon!;
+    _category?.iconColor = _selectedIconColor.value;
+    _category?.backgroundColor = _selectedBackgroundColor.value;
+    _category?.name = _nameCategoryTextController.text;
+    FirebaseService().updateCategory(_category!).then(
+      (_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("create_category_form_update_success".tr()),
+          ),
+        );
+      },
+    ).catchError((error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("create_category_form_update_error".tr()),
+        ),
+      );
+    });
+  }
+
   void _onHandleCreateCategory() {
     final name = _nameCategoryTextController.text;
     if (name.isEmpty) {
@@ -424,18 +420,48 @@ class _CreateOrEditCategoryPageState extends State<CreateOrEditCategoryPage> {
       );
       return;
     }
-    if (_selectedBackgroundColor == null) {
+
+    final newCategory = CategoryModel(
+      id: DateTime.now()
+          .microsecondsSinceEpoch
+          .toString(), // Tạo id duy nhất cho category
+      name: name,
+      icon: _selectedIcon!,
+      backgroundColor: _selectedBackgroundColor.value,
+      iconColor: _selectedIconColor.value,
+    );
+
+    FirebaseService().addCategory(newCategory).then(
+      (_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("create_category_form_create_success".tr()),
+          ),
+        );
+      },
+    ).catchError((error) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("create_category_form_category_color_empty".tr()),
+          content: Text("create_category_form_create_error".tr()),
         ),
       );
-      return;
+    });
+  }
+
+  void _onHandleEditCategory(CategoryModel category) {
+    _nameCategoryTextController.text = category.name;
+    _selectedIcon = category.icon;
+    _selectedBackgroundColor = Color(category.backgroundColor);
+    _selectedIconColor = Color(category.iconColor);
+  }
+
+  void _findCategoryToEdit(String id) async {
+    final category = await FirebaseService().getCategoryById(id);
+    if (category != null) {
+      _onHandleEditCategory(category);
     }
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(name + " - " + _selectedBackgroundColor.toString()),
-      ),
-    );
+    setState(() {
+      _category = category;
+    });
   }
 }

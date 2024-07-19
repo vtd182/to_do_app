@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:to_do_app/ui/category/create_or_edit_category.dart';
 import 'package:to_do_app/ui/login/login_page.dart';
 import 'package:to_do_app/ui/main/main_page.dart';
 import 'package:to_do_app/ui/onboarding/onboarding_page_view.dart';
@@ -14,4 +15,7 @@ final Map<String, Widget Function(BuildContext)> routes = {
   RegisterPage.route: (context) => const RegisterPage(),
   MainPage.route: (context) => const MainPage(),
   SettingPage.route: (context) => const SettingPage(),
+  CreateOrEditCategoryPage.route: (context) => CreateOrEditCategoryPage(
+        categoryId: ModalRoute.of(context)!.settings.arguments as String,
+      ),
 };

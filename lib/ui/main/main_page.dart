@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:to_do_app/constants/constants.dart';
 import 'package:to_do_app/ui/calendar/calendar_page.dart';
 import 'package:to_do_app/ui/home/home_page.dart';
 import 'package:to_do_app/ui/profile/profile_page.dart';
@@ -80,8 +81,8 @@ class _MainPageState extends State<MainPage> {
       floatingActionButton: Container(
         height: 60,
         width: 60,
-        decoration: const BoxDecoration(
-          color: Colors.deepPurple,
+        decoration: BoxDecoration(
+          color: Color(Constants.primaryColor),
           shape: BoxShape.circle,
         ),
         child: IconButton(

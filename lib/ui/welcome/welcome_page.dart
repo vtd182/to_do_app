@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:to_do_app/constants/constants.dart';
 import 'package:to_do_app/ui/register/register_page.dart';
 
 import '../login/login_page.dart';
@@ -101,7 +102,7 @@ class WelcomePage extends StatelessWidget {
             Navigator.of(context).pushNamed(LoginPage.route);
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.deepPurple,
+            backgroundColor: Color(Constants.primaryColor),
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(4)),
             ),
@@ -124,10 +125,10 @@ class WelcomePage extends StatelessWidget {
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.transparent,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(4)),
+          shape: RoundedRectangleBorder(
+            borderRadius: const BorderRadius.all(Radius.circular(4)),
             side: BorderSide(
-              color: Colors.deepPurple,
+              color: Color(Constants.primaryColor),
               width: 1,
             ),
           ),
@@ -158,10 +159,10 @@ class WelcomePage extends StatelessWidget {
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.transparent,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(4)),
+          shape: RoundedRectangleBorder(
+            borderRadius: const BorderRadius.all(Radius.circular(4)),
             side: BorderSide(
-              color: Colors.deepPurple,
+              color: Color(Constants.primaryColor),
               width: 1,
             ),
           ),

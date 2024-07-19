@@ -1,6 +1,7 @@
 {
   "ok_button": "OK",
   "cancel_button": "Hủy",
+  "save_button": "Tạo",
   "welcome_title": "Chào mừng đến với Super to-do app",
   "welcome_description": "Vui lòng đăng nhập vào tài khoản hoặc tạo tài khoản mới để sử dụng ứng dụng",
   "create_category_page_title": "Tạo danh mục",
@@ -12,6 +13,10 @@
   "create_category_form_category_preview_label": "Xem trước",
   "create_category_form_choose_icon_button": "Chọn biểu tượng từ thư viện",
   "create_category_form_create_button": "Tạo",
+  "create_category_form_category_name_empty": "Tên danh mục rỗng",
+  "edit_category_page_title":"Chỉnh sửa danh mục",
+
+
 
   "home_text": "Trang chủ",
   "calendar_text": "Lịch",

@@ -26,4 +26,5 @@ class Constants {
   static String taskCategoryIcon = "assets/images/ic_task_category.png";
   static String taskPriorityIcon = "assets/images/ic_task_priority.png";
   static String taskTimeIcon = "assets/images/ic_task_time.png";
+  static int primaryColor = 0xff8687E7;
 }

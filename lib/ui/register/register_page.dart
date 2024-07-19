@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:to_do_app/ui/register/bloc/register_cubit.dart';
 
+import '../../constants/constants.dart';
 import '../../domain/authentication_repository/authentication_repository.dart';
 import '../login/login_page.dart';
 
@@ -227,7 +228,7 @@ class _RegisterPageViewState extends State<RegisterPageView> {
             _register();
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.deepPurple,
+            backgroundColor: Color(Constants.primaryColor),
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(4)),
             ),
@@ -280,10 +281,10 @@ class _RegisterPageViewState extends State<RegisterPageView> {
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.transparent,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(4)),
+            shape: RoundedRectangleBorder(
+              borderRadius: const BorderRadius.all(Radius.circular(4)),
               side: BorderSide(
-                color: Colors.deepPurple,
+                color: Color(Constants.primaryColor),
                 width: 1,
               ),
             ),
@@ -306,10 +307,10 @@ class _RegisterPageViewState extends State<RegisterPageView> {
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.transparent,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(4)),
+            shape: RoundedRectangleBorder(
+              borderRadius: const BorderRadius.all(Radius.circular(4)),
               side: BorderSide(
-                color: Colors.deepPurple,
+                color: Color(Constants.primaryColor),
                 width: 1,
               ),
             ),

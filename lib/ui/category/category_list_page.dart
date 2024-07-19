@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:to_do_app/ui/category/create_or_edit_category.dart';
+
+import '../../constants/constants.dart';
+import '../../data/models/category.dart';
+import '../../domain/data_source/firebase_service.dart';
 
 class CategoryListPage extends StatefulWidget {
   const CategoryListPage({super.key});
@@ -8,6 +13,23 @@ class CategoryListPage extends StatefulWidget {
 }
 
 class _CategoryListPageState extends State<CategoryListPage> {
+  final FirebaseService _firebaseService = FirebaseService();
+  List<CategoryModel> _categories = [];
+  bool _isEditing = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCategories();
+  }
+
+  Future<void> _loadCategories() async {
+    List<CategoryModel> categories = await _firebaseService.getCategories();
+    setState(() {
+      _categories = categories;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,44 +77,94 @@ class _CategoryListPageState extends State<CategoryListPage> {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3, childAspectRatio: 1.0),
+        crossAxisCount: 3,
+        childAspectRatio: 1.0,
+      ),
       itemBuilder: (context, index) {
-        return _buildGridCategoryItem();
+        if (index == _categories.length) {
+          return _buildGridCategoryItemCreateNew();
+        }
+        return _buildGridCategoryItem(_categories[index]);
       },
-      itemCount: 7,
+      itemCount: _categories.length < 6 ? _categories.length + 1 : 7,
     );
   }
 
-  Widget _buildGridCategoryItem() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Container(
-          margin: const EdgeInsets.only(top: 10),
-          child: Container(
-            width: 64,
-            height: 64,
-            decoration: BoxDecoration(
-              color: Colors.green,
-              borderRadius: BorderRadius.circular(4),
+  Widget _buildGridCategoryItem(CategoryModel category) {
+    return GestureDetector(
+      onTap: () {
+        _onHandleCategoryItemTap(category);
+      },
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            margin: const EdgeInsets.only(top: 10),
+            child: Container(
+              width: 64,
+              height: 64,
+              decoration: BoxDecoration(
+                  color: Color(category.backgroundColor),
+                  borderRadius: BorderRadius.circular(4),
+                  border: _isEditing
+                      ? Border.all(color: Colors.red, width: 2)
+                      : null),
+              child: Icon(
+                category.icon,
+                color: Color(category.iconColor),
+                size: 40,
+              ),
             ),
-            child: const Icon(
-              Icons.add,
+          ),
+          Text(
+            category.name,
+            style: const TextStyle(
+              fontSize: 14,
               color: Colors.white,
-              size: 40,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildGridCategoryItemCreateNew() {
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).pushNamed(CreateOrEditCategoryPage.route);
+      },
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            margin: const EdgeInsets.only(top: 10),
+            child: Container(
+              width: 64,
+              height: 64,
+              decoration: BoxDecoration(
+                color: const Color(0xffC4C4C4),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: const Icon(
+                Icons.add,
+                color: Colors.white,
+                size: 40,
+              ),
             ),
           ),
-        ),
-        const Text(
-          "Category",
-          style: TextStyle(
-            fontSize: 14,
-            color: Colors.white,
+          const Text(
+            "Create new",
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.white,
+            ),
+            textAlign: TextAlign.center,
           ),
-          textAlign: TextAlign.center,
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -124,22 +196,35 @@ class _CategoryListPageState extends State<CategoryListPage> {
         Expanded(
           flex: 1,
           child: ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              setState(() {
+                _isEditing = !_isEditing;
+              });
+            },
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.deepPurple,
+              backgroundColor: Color(Constants.primaryColor),
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(
                   Radius.circular(4),
                 ),
               ),
             ),
-            child: const Text(
-              "Edit",
-              style: TextStyle(color: Colors.white),
+            child: Text(
+              (_isEditing) ? "Cancel edit" : "Edit",
+              style: const TextStyle(color: Colors.white),
             ),
           ),
         ),
       ]),
     );
+  }
+
+  void _onHandleCategoryItemTap(CategoryModel category) {
+    if (_isEditing) {
+      Navigator.of(context)
+          .pushNamed(CreateOrEditCategoryPage.route, arguments: category.id);
+    } else {
+      Navigator.pop(context, category.toMap());
+    }
   }
 }

@@ -15,12 +15,14 @@ dependencies:
   cupertino_icons: ^1.0.6
   easy_localization: ^3.0.7
   realm: ^2.2.1
-  flutter_iconpicker: ^3.4.4
+  flutter_iconpicker: ^3.4.6
   flutter_colorpicker: ^1.0.3
   firebase_core: ^2.31.0
   firebase_auth: ^4.19.5
   flutter_bloc: ^8.1.5
   firebase_database: ^10.5.7
+
+  intl: any
 
 
 dev_dependencies:

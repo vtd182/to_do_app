@@ -11,6 +11,7 @@ import 'package:to_do_app/ui/welcome/welcome_page.dart';
 import 'package:to_do_app/utils/enums/authentication_status.dart';
 
 import 'app/app_cubit.dart';
+import 'constants/constants.dart';
 
 void main() async {
   // init easy localization
@@ -77,7 +78,8 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'My To-Do App',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme:
+            ColorScheme.fromSeed(seedColor: Color(Constants.primaryColor)),
         useMaterial3: true,
         fontFamily: 'Lato',
       ),
@@ -108,7 +110,6 @@ class _MyAppState extends State<MyApp> {
       },
       onGenerateRoute: (_) =>
           MaterialPageRoute(builder: (context) => const SplashScreen()),
-      // home: const CreateOrEditCategoryPage(),
       debugShowCheckedModeBanner: false,
     );
   }
