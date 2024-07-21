@@ -8,6 +8,7 @@ class CategoryModel {
   IconData? icon;
   int backgroundColor;
   int iconColor;
+  String userId;
 
   CategoryModel({
     required this.id,
@@ -15,6 +16,7 @@ class CategoryModel {
     required this.icon,
     required this.backgroundColor,
     required this.iconColor,
+    required this.userId,
   });
 
   Map<String, dynamic> toMap() {
@@ -24,6 +26,7 @@ class CategoryModel {
       'icon': serializeIcon(icon!, iconPack: IconPack.allMaterial),
       'backgroundColor': backgroundColor,
       'iconColor': iconColor,
+      'userId': userId,
     };
   }
 
@@ -35,6 +38,7 @@ class CategoryModel {
           iconPack: IconPack.allMaterial),
       backgroundColor: map['backgroundColor'],
       iconColor: map['iconColor'],
+      userId: map['userId'],
     );
   }
 }

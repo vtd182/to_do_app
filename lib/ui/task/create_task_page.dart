@@ -1,9 +1,13 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:to_do_app/constants/constants.dart';
 import 'package:to_do_app/data/models/category.dart';
 import 'package:to_do_app/ui/category/category_list_page.dart';
 import 'package:to_do_app/ui/task_priority/task_priority_list_page.dart';
+
+import '../../data/models/task.dart';
+import '../../domain/data_source/firebase_service.dart';
 
 class CreateTaskPage extends StatefulWidget {
   const CreateTaskPage({super.key});
@@ -380,12 +384,38 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
     if (_descriptionTaskTextController.text.isEmpty) {
       return;
     }
+    // get current user id
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      return;
+    }
 
-    print('create task' +
-        _selectedCategory.toString() +
-        _selectedDateTime.toString() +
-        _selectedPriority.toString() +
-        _nameTaskTextController.text +
-        _descriptionTaskTextController.text);
+    final newTask = TaskModel(
+      id: DateTime.now()
+          .microsecondsSinceEpoch
+          .toString(), // Tạo id duy nhất cho task
+      name: _nameTaskTextController.text,
+      description: _descriptionTaskTextController.text,
+      categoryId: _selectedCategory!.id,
+      dateTime: _selectedDateTime!,
+      priority: _selectedPriority!,
+      userId: user.uid, isDone: false,
+    );
+
+    FirebaseService().addTask(newTask).then(
+      (_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("create_task_form_create_success".tr()),
+          ),
+        );
+      },
+    ).catchError((error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("create_task_form_create_error".tr()),
+        ),
+      );
+    });
   }
 }

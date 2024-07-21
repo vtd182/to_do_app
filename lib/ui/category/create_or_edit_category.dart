@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_iconpicker/flutter_iconpicker.dart';
@@ -298,7 +299,7 @@ class _CreateOrEditCategoryPageState extends State<CreateOrEditCategoryPage> {
                     : "create_category_form_create_button".tr(),
                 style: TextStyle(
                   fontSize: 16,
-                  fontFamily: 'Late',
+                  fontFamily: 'Lato',
                   color: Colors.white.withOpacity(0.8),
                 ),
               ),
@@ -429,6 +430,7 @@ class _CreateOrEditCategoryPageState extends State<CreateOrEditCategoryPage> {
       icon: _selectedIcon!,
       backgroundColor: _selectedBackgroundColor.value,
       iconColor: _selectedIconColor.value,
+      userId: FirebaseAuth.instance.currentUser!.uid,
     );
 
     FirebaseService().addCategory(newCategory).then(
