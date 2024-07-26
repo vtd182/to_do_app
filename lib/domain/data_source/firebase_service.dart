@@ -116,4 +116,9 @@ class FirebaseService {
     );
     return tasks;
   }
+
+  // delete task
+  Future<void> deleteCategory(String id) async {
+    await _database.child('categories/$id').remove();
+  }
 }

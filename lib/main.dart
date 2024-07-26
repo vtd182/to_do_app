@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:to_do_app/domain/authentication_repository/authentication_repository.dart';
 import 'package:to_do_app/domain/data_source/firebase_auth_service.dart';
+import 'package:to_do_app/domain/data_source/firebase_service.dart';
 import 'package:to_do_app/routes.dart';
+import 'package:to_do_app/ui/home/bloc/home_page_cubit.dart';
 import 'package:to_do_app/ui/main/main_page.dart';
 import 'package:to_do_app/ui/splash/splash.dart';
 import 'package:to_do_app/ui/welcome/welcome_page.dart';
@@ -37,6 +39,7 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   late final AuthenticationRepository authenticationRepository;
   late final FirebaseAuthService firebaseAuthService;
+  late final FirebaseService firebaseService;
 
   @override
   void initState() {
@@ -45,22 +48,34 @@ class _AppState extends State<App> {
     authenticationRepository = AuthenticationRepositoryImpl(
       firebaseAuthService: firebaseAuthService,
     );
+    firebaseService = FirebaseService();
   }
 
   @override
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
-        providers: [
-          RepositoryProvider<AuthenticationRepository>(
-            create: (context) => authenticationRepository,
-          ),
-        ],
-        child: BlocProvider(
-            create: (BuildContext context) {
-              return AppCubit(
-                  authenticationRepository: authenticationRepository);
-            },
-            child: const MyApp()));
+      providers: [
+        RepositoryProvider<AuthenticationRepository>(
+          create: (context) => authenticationRepository,
+        ),
+        RepositoryProvider<FirebaseService>(
+          create: (context) => FirebaseService(),
+        ),
+        RepositoryProvider<HomePageCubit>(create: (context) {
+          return HomePageCubit(
+            firebaseService: firebaseService,
+          );
+        })
+      ],
+      child: BlocProvider(
+        create: (BuildContext context) {
+          return AppCubit(
+            authenticationRepository: authenticationRepository,
+          );
+        },
+        child: const MyApp(),
+      ),
+    );
   }
 }
 

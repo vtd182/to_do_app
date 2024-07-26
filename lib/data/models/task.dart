@@ -1,11 +1,11 @@
 class TaskModel {
   final String id;
-  final String name;
-  final String description;
-  final String categoryId;
-  late final DateTime dateTime;
-  late final int priority;
-  final bool isDone;
+  String name;
+  String description;
+  String categoryId;
+  DateTime dateTime;
+  int priority;
+  bool isDone;
   final String userId;
 
   TaskModel({

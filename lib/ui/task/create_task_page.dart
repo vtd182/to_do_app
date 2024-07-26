@@ -1,22 +1,36 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:to_do_app/constants/constants.dart';
 import 'package:to_do_app/data/models/category.dart';
 import 'package:to_do_app/ui/category/category_list_page.dart';
 import 'package:to_do_app/ui/task_priority/task_priority_list_page.dart';
 
 import '../../data/models/task.dart';
-import '../../domain/data_source/firebase_service.dart';
+import '../home/bloc/home_page_cubit.dart';
 
-class CreateTaskPage extends StatefulWidget {
+class CreateTaskPage extends StatelessWidget {
   const CreateTaskPage({super.key});
 
   @override
-  State<CreateTaskPage> createState() => _CreateTaskPageState();
+  Widget build(BuildContext context) {
+    return BlocBuilder<HomePageCubit, HomePageState>(
+      builder: (context, state) {
+        return const CreateTaskPageView();
+      },
+    );
+  }
 }
 
-class _CreateTaskPageState extends State<CreateTaskPage> {
+class CreateTaskPageView extends StatefulWidget {
+  const CreateTaskPageView({super.key});
+
+  @override
+  State<CreateTaskPageView> createState() => _CreateTaskPageViewState();
+}
+
+class _CreateTaskPageViewState extends State<CreateTaskPageView> {
   final _nameTaskTextController = TextEditingController();
   final _descriptionTaskTextController = TextEditingController();
   CategoryModel? _selectedCategory;
@@ -402,20 +416,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
       userId: user.uid, isDone: false,
     );
 
-    FirebaseService().addTask(newTask).then(
-      (_) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("create_task_form_create_success".tr()),
-          ),
-        );
-      },
-    ).catchError((error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("create_task_form_create_error".tr()),
-        ),
-      );
-    });
+    print(context.read<HomePageCubit>().hashCode);
+    context.read<HomePageCubit>().addTask(newTask);
   }
 }

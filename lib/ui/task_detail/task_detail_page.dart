@@ -1,8 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:to_do_app/data/models/category.dart';
 import 'package:to_do_app/data/models/task.dart';
+import 'package:to_do_app/ui/home/bloc/home_page_cubit.dart';
 import 'package:to_do_app/ui/task_priority/task_priority_list_page.dart';
+import 'package:to_do_app/utils/global_function/global_function.dart';
 
 import '../../constants/constants.dart';
 import '../../domain/data_source/firebase_service.dart';
@@ -45,13 +48,6 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
         _findTaskToEdit(widget.taskId!);
       }
     });
-  }
-
-  Color darkenColor(Color color, [double amount = 0.15]) {
-    assert(amount >= 0 && amount <= 1);
-    final hsl = HSLColor.fromColor(color);
-    final hslDark = hsl.withLightness((hsl.lightness - amount).clamp(0.0, 1.0));
-    return hslDark.toColor();
   }
 
   Widget _buildCloseIcon() {
@@ -103,7 +99,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
           _buildTaskField(Constants.subTaskIcon, "Sub Task:", "Add sub task"),
           _buildDeleteButton(),
           const Spacer(),
-          _buildEditButton(),
+          _task!.isDone ? Container() : _buildEditButton(),
         ],
       ),
     );
@@ -181,7 +177,8 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                       children: [
                         Icon(
                           _category!.icon,
-                          color: darkenColor(Color(_category!.backgroundColor)),
+                          color: GlobalFunction.darkenColor(
+                              Color(_category!.backgroundColor)),
                           size: 20,
                         ),
                         const SizedBox(width: 4),
@@ -313,7 +310,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                 TextButton(
                   onPressed: () {
                     // dismiss the dialog
-                    Navigator.of(context).pop();
+                    Navigator.pop(context);
                   },
                   child: const Text("Cancel"),
                 ),
@@ -344,21 +341,31 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
 
   Widget _buildEditButton() {
     return Container(
-        margin: const EdgeInsets.only(bottom: 70, left: 20, right: 20),
-        height: 48,
-        width: double.infinity,
-        child: ElevatedButton(
-          onPressed: () {},
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Color(Constants.primaryColor),
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(4)),
-            ),
+      margin: const EdgeInsets.only(bottom: 70, left: 20, right: 20),
+      height: 48,
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: () {
+          if (_category == null) {
+            return;
+          }
+          _task?.categoryId = _category!.id;
+          _task?.dateTime = _selectedDateTime!;
+          _task?.priority = _selectedPriority!;
+          context.read<HomePageCubit>().updateTask(_task!);
+          Navigator.pop(context);
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Color(Constants.primaryColor),
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(4)),
           ),
-          child: Text(
-            "edit_task_text".tr(),
-            style: const TextStyle(color: Colors.white, fontSize: 16),
-          ),
-        ));
+        ),
+        child: Text(
+          "edit_task_text".tr(),
+          style: const TextStyle(color: Colors.white, fontSize: 16),
+        ),
+      ),
+    );
   }
 }

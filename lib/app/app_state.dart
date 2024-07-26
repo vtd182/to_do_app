@@ -3,10 +3,16 @@ part of 'app_cubit.dart';
 class AppState extends Equatable {
   final AuthenticationStatus status;
 
-  const AppState({this.status = AuthenticationStatus.unauthenticated});
+  const AppState({
+    this.status = AuthenticationStatus.unauthenticated,
+  });
 
   AppState copyWith({
-    final AuthenticationStatus? status,
+    AuthenticationStatus? status,
+    List<TaskModel>? tasks,
+    List<TaskModel>? completedTasks,
+    List<TaskModel>? incompleteTasks,
+    List<CategoryModel>? categories,
   }) {
     return AppState(
       status: status ?? this.status,
@@ -14,7 +20,6 @@ class AppState extends Equatable {
   }
 
   @override
-  // TODO: implement props
   List<Object?> get props => [
         status,
       ];
