@@ -1,11 +1,23 @@
 part of 'login_cubit.dart';
 
-class LoginState extends Equatable {
-  String title;
-  LoginState(this.title);
+abstract class LoginState extends Equatable {
+  const LoginState();
 
   @override
-  List<Object> get props => [
-        title,
-      ];
+  List<Object> get props => [];
+}
+
+class LoginInitial extends LoginState {}
+
+class LoginLoading extends LoginState {}
+
+class LoginSuccess extends LoginState {}
+
+class LoginFailure extends LoginState {
+  final String error;
+
+  const LoginFailure(this.error);
+
+  @override
+  List<Object> get props => [error];
 }

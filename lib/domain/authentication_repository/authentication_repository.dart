@@ -54,7 +54,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
         password: password,
       );
     } catch (e) {
-      print(e);
+      rethrow;
     }
   }
 
@@ -69,7 +69,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
         password: password,
       );
     } catch (e) {
-      print(e);
+      rethrow;
     }
   }
 

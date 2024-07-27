@@ -16,10 +16,8 @@ class FirebaseAuthService {
         email: email,
         password: password,
       );
-      // print if login success
-      print('Login success');
     } catch (e) {
-      print(e);
+      rethrow;
     }
   }
 
@@ -33,7 +31,7 @@ class FirebaseAuthService {
         password: password,
       );
     } catch (e) {
-      print(e);
+      rethrow;
     }
   }
 }

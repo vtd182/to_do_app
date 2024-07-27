@@ -1,4 +1,6 @@
 class Constants {
+  static String emailRegex =
+      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
   static String settingIcon = "assets/images/ic_settings.png";
   static String profileIcon = "assets/images/ic_profile.png";
   static String homeIcon = "assets/images/ic_home.png";

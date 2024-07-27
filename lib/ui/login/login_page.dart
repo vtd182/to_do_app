@@ -50,26 +50,51 @@ class LoginPageView extends StatefulWidget {
 class _LoginPageViewState extends State<LoginPageView> {
   final _emailTextController = TextEditingController();
   final _passwordTextController = TextEditingController();
+  final usernameFormKey = GlobalKey<FormState>();
+  final passwordFormKey = GlobalKey<FormState>();
+  var _autoValidateMode = AutovalidateMode.disabled;
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: false,
-      child: SingleChildScrollView(
-        child: Container(
-          margin: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              _buildTextTitle(),
-              _buildFormLogin(),
-              const SizedBox(height: 30),
-              _buildFormPassword(),
-              _buildLoginButton(),
-              _buildOrSplitDivider(),
-              _buildLoginWithGoogleButton(),
-              _buildLoginWithAppleButton(),
-              const SizedBox(height: 20),
-              _buildDontHaveAccount(),
-            ],
+    return BlocListener<LoginCubit, LoginState>(
+      listener: (context, state) {
+        if (state is LoginLoading) {
+          // Show loading indicator
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            },
+          );
+        } else if (state is LoginFailure) {
+          Navigator.of(context).pop(); // Dismiss loading indicator
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Email or password is incorrect")),
+          );
+        }
+      },
+      child: SafeArea(
+        top: false,
+        child: SingleChildScrollView(
+          child: Container(
+            margin: const EdgeInsets.all(20),
+            child: Column(
+              children: [
+                _buildTextTitle(),
+                _buildFormLogin(),
+                const SizedBox(height: 30),
+                _buildFormPassword(),
+                _buildLoginButton(),
+                _buildOrSplitDivider(),
+                _buildLoginWithGoogleButton(),
+                _buildLoginWithAppleButton(),
+                const SizedBox(height: 20),
+                _buildDontHaveAccount(),
+              ],
+            ),
           ),
         ),
       ),
@@ -93,6 +118,8 @@ class _LoginPageViewState extends State<LoginPageView> {
 
   Widget _buildFormLogin() {
     return Form(
+      key: usernameFormKey,
+      autovalidateMode: _autoValidateMode,
       child: Column(
         children: [
           Container(
@@ -109,6 +136,18 @@ class _LoginPageViewState extends State<LoginPageView> {
             margin: const EdgeInsets.only(top: 10),
             child: TextFormField(
               controller: _emailTextController,
+              validator: (String? value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter some text';
+                }
+                final emailValid = RegExp(
+                  Constants.emailRegex,
+                ).hasMatch(value);
+                if (!emailValid) {
+                  return 'Please enter a valid email';
+                }
+                return null;
+              },
               style: const TextStyle(
                 color: Colors.white,
               ),
@@ -133,6 +172,8 @@ class _LoginPageViewState extends State<LoginPageView> {
 
   Widget _buildFormPassword() {
     return Form(
+      key: passwordFormKey,
+      autovalidateMode: _autoValidateMode,
       child: Column(
         children: [
           Container(
@@ -150,11 +191,20 @@ class _LoginPageViewState extends State<LoginPageView> {
             child: TextFormField(
               controller: _passwordTextController,
               obscureText: true,
+              validator: (String? value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter some text';
+                }
+                if (value.length < 6) {
+                  return 'Password must be at least 6 characters';
+                }
+                return null;
+              },
               style: const TextStyle(
                 color: Colors.white,
               ),
               decoration: InputDecoration(
-                hintText: 'Enter your username',
+                hintText: 'Enter your password',
                 hintStyle: TextStyle(
                   color: Colors.white.withOpacity(0.5),
                   fontSize: 16,
@@ -174,24 +224,25 @@ class _LoginPageViewState extends State<LoginPageView> {
 
   Widget _buildLoginButton() {
     return Container(
-        margin: const EdgeInsets.only(top: 50),
-        height: 48,
-        width: double.infinity,
-        child: ElevatedButton(
-          onPressed: () {
-            _login();
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Color(Constants.primaryColor),
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(4)),
-            ),
+      margin: const EdgeInsets.only(top: 50),
+      height: 48,
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: () {
+          _login();
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Color(Constants.primaryColor),
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(4)),
           ),
-          child: const Text(
-            'Login',
-            style: TextStyle(color: Colors.white),
-          ),
-        ));
+        ),
+        child: const Text(
+          'Login',
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
+    );
   }
 
   Widget _buildOrSplitDivider() {
@@ -323,10 +374,20 @@ class _LoginPageViewState extends State<LoginPageView> {
   }
 
   void _login() {
-    // TODO: validate email and password
-    print('Login');
-    final email = _emailTextController.text;
-    final password = _passwordTextController.text;
-    context.read<LoginCubit>().login(email, password);
+    if (_autoValidateMode == AutovalidateMode.disabled) {
+      setState(() {
+        _autoValidateMode = AutovalidateMode.always;
+      });
+    }
+    final isEmailValid = usernameFormKey.currentState?.validate() ?? false;
+    final isPasswordValid = passwordFormKey.currentState?.validate() ?? false;
+    final isValid = isEmailValid && isPasswordValid;
+    if (!isValid) {
+      return;
+    } else {
+      final email = _emailTextController.text;
+      final password = _passwordTextController.text;
+      context.read<LoginCubit>().login(email, password);
+    }
   }
 }

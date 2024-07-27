@@ -5,21 +5,22 @@ import '../../../domain/authentication_repository/authentication_repository.dart
 
 part 'login_state.dart';
 
-// admin1@admin.com
+// admin@admin.com
 // admin123
 class LoginCubit extends Cubit<LoginState> {
   final AuthenticationRepository authenticationRepository;
 
-  LoginCubit({required this.authenticationRepository}) : super(LoginState(""));
+  LoginCubit({required this.authenticationRepository}) : super(LoginInitial());
 
-  void login(String email, String password) {
+  Future<void> login(String email, String password) async {
+    emit(LoginLoading());
     try {
-      authenticationRepository.loginByEmailAndPassword(
+      await authenticationRepository.loginByEmailAndPassword(
         email: email,
         password: password,
       );
     } catch (e) {
-      print(e);
+      emit(LoginFailure(e.toString()));
     }
   }
 }

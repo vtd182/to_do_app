@@ -52,29 +52,66 @@ class _RegisterPageViewState extends State<RegisterPageView> {
   final _emailTextController = TextEditingController();
   final _passwordTextController = TextEditingController();
   final _confirmPasswordTextController = TextEditingController();
+  final usernameFormKey = GlobalKey<FormState>();
+  final passwordFormKey = GlobalKey<FormState>();
+  final confirmPasswordFormKey = GlobalKey<FormState>();
+  var _autoValidateMode = AutovalidateMode.disabled;
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: SingleChildScrollView(
-        child: Container(
-          margin: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              _buildTextTitle(),
-              _buildFormRegister(),
-              const SizedBox(height: 30),
-              _buildFormPassword(),
-              const SizedBox(height: 30),
-              _buildFormConfirmPassword(),
-              _buildRegisterButton(),
-              _buildOrSplitDivider(),
-              _buildRegisterWithGoogleButton(),
-              _buildRegisterWithAppleButton(),
-              const SizedBox(height: 20),
-              _buildHaveAnAccount(),
-              const SizedBox(height: 30),
-            ],
+    return BlocListener<RegisterCubit, RegisterState>(
+      listener: (context, state) {
+        if (state is RegisterLoading) {
+          // Show loading indicator
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            },
+          );
+        }
+        if (state is RegisterSuccess) {
+          // show dialog success
+          //Navigator.of(context).pop(); // Dismiss loading indicator
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Register success'),
+            ),
+          );
+        }
+        if (state is RegisterFailure) {
+          Navigator.of(context).pop(); // Dismiss loading indicator
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.error),
+            ),
+          );
+        }
+      },
+      child: SafeArea(
+        child: SingleChildScrollView(
+          child: Container(
+            margin: const EdgeInsets.all(20),
+            child: Column(
+              children: [
+                _buildTextTitle(),
+                _buildFormRegister(),
+                const SizedBox(height: 30),
+                _buildFormPassword(),
+                const SizedBox(height: 30),
+                _buildFormConfirmPassword(),
+                _buildRegisterButton(),
+                _buildOrSplitDivider(),
+                _buildRegisterWithGoogleButton(),
+                _buildRegisterWithAppleButton(),
+                const SizedBox(height: 20),
+                _buildHaveAnAccount(),
+                const SizedBox(height: 30),
+              ],
+            ),
           ),
         ),
       ),
@@ -98,6 +135,8 @@ class _RegisterPageViewState extends State<RegisterPageView> {
 
   Widget _buildFormRegister() {
     return Form(
+      key: usernameFormKey,
+      autovalidateMode: _autoValidateMode,
       child: Column(
         children: [
           Container(
@@ -114,6 +153,16 @@ class _RegisterPageViewState extends State<RegisterPageView> {
             margin: const EdgeInsets.only(top: 10),
             child: TextFormField(
               controller: _emailTextController,
+              validator: (String? value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter some text';
+                }
+                final emailValid = RegExp(Constants.emailRegex).hasMatch(value);
+                if (!emailValid) {
+                  return 'Please enter a valid email';
+                }
+                return null;
+              },
               style: const TextStyle(
                 color: Colors.white,
               ),
@@ -138,6 +187,8 @@ class _RegisterPageViewState extends State<RegisterPageView> {
 
   Widget _buildFormPassword() {
     return Form(
+      key: passwordFormKey,
+      autovalidateMode: _autoValidateMode,
       child: Column(
         children: [
           Container(
@@ -154,6 +205,15 @@ class _RegisterPageViewState extends State<RegisterPageView> {
             margin: const EdgeInsets.only(top: 10),
             child: TextFormField(
               controller: _passwordTextController,
+              validator: (String? value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter some text';
+                }
+                if (value.length < 6) {
+                  return 'Password must be at least 6 characters';
+                }
+                return null;
+              },
               obscureText: true,
               style: const TextStyle(
                 color: Colors.white,
@@ -179,6 +239,8 @@ class _RegisterPageViewState extends State<RegisterPageView> {
 
   Widget _buildFormConfirmPassword() {
     return Form(
+      key: confirmPasswordFormKey,
+      autovalidateMode: _autoValidateMode,
       child: Column(
         children: [
           Container(
@@ -195,6 +257,18 @@ class _RegisterPageViewState extends State<RegisterPageView> {
             margin: const EdgeInsets.only(top: 10),
             child: TextFormField(
               controller: _confirmPasswordTextController,
+              validator: (String? value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter some text';
+                }
+                if (value.length < 6) {
+                  return 'Password must be at least 6 characters';
+                }
+                if (value != _passwordTextController.text) {
+                  return 'Passwords do not match';
+                }
+                return null;
+              },
               obscureText: true,
               style: const TextStyle(
                 color: Colors.white,
@@ -346,13 +420,25 @@ class _RegisterPageViewState extends State<RegisterPageView> {
   }
 
   void _register() {
+    if (_autoValidateMode == AutovalidateMode.disabled) {
+      setState(() {
+        _autoValidateMode = AutovalidateMode.always;
+      });
+    }
     final email = _emailTextController.text;
     final password = _passwordTextController.text;
-    final confirmPassword = _confirmPasswordTextController.text;
-    if (password != confirmPassword) {
-      print('Password and confirm password are not the same');
+
+    final isEmailValid = usernameFormKey.currentState?.validate() ?? false;
+    final isPasswordValid = passwordFormKey.currentState?.validate() ?? false;
+    final isConfirmPasswordValid =
+        confirmPasswordFormKey.currentState?.validate() ?? false;
+    final isValid = isEmailValid && isPasswordValid && isConfirmPasswordValid;
+
+    if (!isValid) {
+      print('Form is not valid');
       return;
+    } else {
+      context.read<RegisterCubit>().register(email, password);
     }
-    context.read<RegisterCubit>().register(email, password);
   }
 }

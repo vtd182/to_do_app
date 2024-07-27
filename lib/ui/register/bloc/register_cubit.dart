@@ -9,16 +9,18 @@ class RegisterCubit extends Cubit<RegisterState> {
   final AuthenticationRepository authenticationRepository;
 
   RegisterCubit({required this.authenticationRepository})
-      : super(RegisterState(""));
+      : super(RegisterInitial());
 
-  void register(String email, String password) {
+  Future<void> register(String email, String password) async {
+    emit(RegisterLoading());
     try {
-      authenticationRepository.registerByEmailAndPassword(
+      await authenticationRepository.registerByEmailAndPassword(
         email: email,
         password: password,
       );
+      emit(RegisterSuccess());
     } catch (e) {
-      print(e);
+      emit(RegisterFailure(e.toString()));
     }
   }
 }
