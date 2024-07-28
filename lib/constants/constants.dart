@@ -3,7 +3,6 @@ class Constants {
       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
   static String settingIcon = "assets/images/ic_settings.png";
   static String profileIcon = "assets/images/ic_profile.png";
-  static String homeIcon = "assets/images/ic_home.png";
   static String passwordIcon = "assets/images/ic_password.png";
   static String languageIcon = "assets/images/ic_language.png";
   static String themeIcon = "assets/images/ic_theme.png";
@@ -28,5 +27,11 @@ class Constants {
   static String taskCategoryIcon = "assets/images/ic_task_category.png";
   static String taskPriorityIcon = "assets/images/ic_task_priority.png";
   static String taskTimeIcon = "assets/images/ic_task_time.png";
+  static String focusIconFill = "assets/images/ic_focus_fill.png";
+  static String focusIcon = "assets/images/ic_focus_outline.png";
+  static String calendarIcon = "assets/images/ic_calendar_outline.png";
+  static String calendarIconFill = "assets/images/ic_calendar_fill.png";
+  static String homeIconFill = "assets/images/ic_home_fill.png";
+  static String homeIcon = "assets/images/ic_home_outline.png";
   static int primaryColor = 0xff8687E7;
 }

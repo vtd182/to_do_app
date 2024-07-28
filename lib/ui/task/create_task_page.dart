@@ -416,7 +416,6 @@ class _CreateTaskPageViewState extends State<CreateTaskPageView> {
       userId: user.uid, isDone: false,
     );
 
-    print(context.read<HomePageCubit>().hashCode);
     context.read<HomePageCubit>().addTask(newTask);
   }
 }

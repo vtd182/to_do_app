@@ -41,8 +41,10 @@ class _MainPageState extends State<MainPage> {
       body: _page[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         unselectedItemColor: Colors.white,
+        selectedItemColor: Color(Constants.primaryColor),
         backgroundColor: Colors.grey.withOpacity(0.2),
         type: BottomNavigationBarType.fixed,
+        currentIndex: _selectedIndex,
         onTap: (index) {
           setState(() {
             if (index != 2) {
@@ -52,14 +54,16 @@ class _MainPageState extends State<MainPage> {
         },
         items: [
           BottomNavigationBarItem(
-            icon: const Icon(Icons.home, color: Colors.white),
+            icon: Image.asset(Constants.homeIcon),
             label: "home_text".tr(),
             backgroundColor: Colors.transparent,
+            activeIcon: Image.asset(Constants.homeIconFill),
           ),
           BottomNavigationBarItem(
-            icon: const Icon(Icons.calendar_month, color: Colors.white),
+            icon: Image.asset(Constants.calendarIcon),
             label: 'calendar_text'.tr(),
             backgroundColor: Colors.transparent,
+            activeIcon: Image.asset(Constants.calendarIconFill),
           ),
           BottomNavigationBarItem(
             icon: Container(),
@@ -67,12 +71,13 @@ class _MainPageState extends State<MainPage> {
             backgroundColor: Colors.transparent,
           ),
           BottomNavigationBarItem(
-            icon: const Icon(Icons.timeline, color: Colors.white),
+            icon: Image.asset(Constants.focusIcon, height: 24, width: 24),
             label: 'focus_text'.tr(),
             backgroundColor: Colors.transparent,
+            activeIcon: Image.asset(Constants.focusIconFill),
           ),
           BottomNavigationBarItem(
-            icon: const Icon(Icons.person, color: Colors.white),
+            icon: Image.asset(Constants.profileIcon),
             label: "profile_text".tr(),
             backgroundColor: Colors.transparent,
           ),

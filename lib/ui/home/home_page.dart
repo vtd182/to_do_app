@@ -40,6 +40,9 @@ class HomePageView extends StatefulWidget {
 }
 
 class _HomePageViewState extends State<HomePageView> {
+  var dropDownValue = "Today";
+  var dropDownItem = ["Today", "Tomorrow", "All"];
+
   @override
   void initState() {
     super.initState();
@@ -65,7 +68,13 @@ class _HomePageViewState extends State<HomePageView> {
 
   Widget _buildBodyPage() {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        _buildSearchBar(),
+        const SizedBox(height: 15),
+        _buildDropDownButtonFilter(),
+        const SizedBox(height: 15),
         _buildListTask(widget.incompletedTasks),
         Text(
           "Completed tasks: ${widget.completedTasks.length}",
@@ -73,6 +82,69 @@ class _HomePageViewState extends State<HomePageView> {
         ),
         _buildListTask(widget.completedTasks),
       ],
+    );
+  }
+
+  Widget _buildSearchBar() {
+    return Container(
+      padding: const EdgeInsets.only(bottom: 5, top: 5),
+      decoration: BoxDecoration(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: Colors.grey.shade500,
+          width: 1,
+        ),
+      ),
+      child: const TextField(
+        decoration: InputDecoration(
+          hintText: "Search for your task...",
+          hintStyle: TextStyle(
+            color: Colors.white54,
+            fontSize: 18,
+          ),
+          prefixIcon: Icon(
+            Icons.search,
+            color: Colors.white54,
+          ),
+          border: InputBorder.none,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDropDownButtonFilter() {
+    return Container(
+      padding: const EdgeInsets.only(left: 15, top: 10, bottom: 10, right: 10),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade800,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: DropdownButton<String>(
+        isDense: true,
+        alignment: AlignmentDirectional.center,
+        value: dropDownValue,
+        items: dropDownItem.map((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+          );
+        }).toList(),
+        onChanged: (value) {
+          setState(
+            () {
+              dropDownValue = value!;
+            },
+          );
+        },
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 16,
+        ),
+        borderRadius: BorderRadius.circular(10),
+        dropdownColor: Colors.grey.shade800,
+        underline: Container(),
+      ),
     );
   }
 
