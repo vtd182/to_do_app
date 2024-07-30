@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:to_do_app/app/language_cubit.dart';
 import 'package:to_do_app/domain/authentication_repository/authentication_repository.dart';
 import 'package:to_do_app/domain/data_source/firebase_auth_service.dart';
 import 'package:to_do_app/domain/data_source/firebase_service.dart';
@@ -14,6 +15,7 @@ import 'package:to_do_app/utils/enums/authentication_status.dart';
 
 import 'app/app_cubit.dart';
 import 'constants/constants.dart';
+import 'domain/data_source/firebase_user_service.dart';
 
 void main() async {
   // init easy localization
@@ -40,6 +42,7 @@ class _AppState extends State<App> {
   late final AuthenticationRepository authenticationRepository;
   late final FirebaseAuthService firebaseAuthService;
   late final FirebaseService firebaseService;
+  late final FirebaseUserService firebaseUserService;
 
   @override
   void initState() {
@@ -49,6 +52,8 @@ class _AppState extends State<App> {
       firebaseAuthService: firebaseAuthService,
     );
     firebaseService = FirebaseService();
+    firebaseUserService = FirebaseUserService();
+    print(firebaseUserService.hashCode);
   }
 
   @override
@@ -59,13 +64,23 @@ class _AppState extends State<App> {
           create: (context) => authenticationRepository,
         ),
         RepositoryProvider<FirebaseService>(
-          create: (context) => FirebaseService(),
+          create: (context) => firebaseService,
         ),
-        RepositoryProvider<HomePageCubit>(create: (context) {
-          return HomePageCubit(
-            firebaseService: firebaseService,
-          );
-        })
+        RepositoryProvider<FirebaseUserService>(
+          create: (context) => firebaseUserService,
+        ),
+        RepositoryProvider<HomePageCubit>(
+          create: (context) {
+            return HomePageCubit(
+              firebaseService: firebaseService,
+            );
+          },
+        ),
+        RepositoryProvider<LanguageCubit>(
+          create: (context) {
+            return LanguageCubit();
+          },
+        ),
       ],
       child: BlocProvider(
         create: (BuildContext context) {

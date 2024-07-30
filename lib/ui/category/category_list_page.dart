@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:to_do_app/ui/category/create_or_edit_category.dart';
 
@@ -53,9 +54,9 @@ class _CategoryListPageState extends State<CategoryListPage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Text(
-              "Choose category",
-              style: TextStyle(
+            Text(
+              "choose_category_text".tr(),
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 16,
               ),
@@ -107,9 +108,7 @@ class _CategoryListPageState extends State<CategoryListPage> {
               decoration: BoxDecoration(
                   color: Color(category.backgroundColor),
                   borderRadius: BorderRadius.circular(4),
-                  border: _isEditing
-                      ? Border.all(color: Colors.red, width: 2)
-                      : null),
+                  border: _isEditing ? Border.all(color: Colors.red, width: 2) : null),
               child: Icon(
                 category.icon,
                 color: Color(category.iconColor),
@@ -155,9 +154,9 @@ class _CategoryListPageState extends State<CategoryListPage> {
               ),
             ),
           ),
-          const Text(
-            "Create new",
-            style: TextStyle(
+          Text(
+            "create_new_button".tr(),
+            style: const TextStyle(
               fontSize: 14,
               color: Colors.white,
             ),
@@ -186,9 +185,9 @@ class _CategoryListPageState extends State<CategoryListPage> {
                 ),
               ),
             ),
-            child: const Text(
-              "Cancel",
-              style: TextStyle(color: Colors.white),
+            child: Text(
+              "cancel_button".tr(),
+              style: const TextStyle(color: Colors.white),
             ),
           ),
         ),
@@ -210,7 +209,7 @@ class _CategoryListPageState extends State<CategoryListPage> {
               ),
             ),
             child: Text(
-              (_isEditing) ? "Cancel edit" : "Edit",
+              (_isEditing) ? "cancel_edit_button".tr() : "edit_button".tr(),
               style: const TextStyle(color: Colors.white),
             ),
           ),
@@ -221,8 +220,7 @@ class _CategoryListPageState extends State<CategoryListPage> {
 
   void _onHandleCategoryItemTap(CategoryModel category) {
     if (_isEditing) {
-      Navigator.of(context)
-          .pushNamed(CreateOrEditCategoryPage.route, arguments: category.id);
+      Navigator.of(context).pushNamed(CreateOrEditCategoryPage.route, arguments: category.id);
     } else {
       Navigator.pop(context, category.toMap());
     }

@@ -27,6 +27,9 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
   String? _selectedName;
   String? _selectedDescription;
   int? _selectedPriority;
+  TextEditingController taskNameController = TextEditingController();
+  TextEditingController taskDescriptionController = TextEditingController();
+
   final FirebaseService _firebaseService = FirebaseService();
   @override
   Widget build(BuildContext context) {
@@ -51,9 +54,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
   }
 
   Widget _buildCloseIcon() {
-    return GestureDetector(
-        onTap: () => Navigator.pop(context),
-        child: Image.asset(Constants.closeIcon));
+    return GestureDetector(onTap: () => Navigator.pop(context), child: Image.asset(Constants.closeIcon));
   }
 
   void _findTaskToEdit(String taskId) async {
@@ -71,8 +72,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
   }
 
   void _findCategoryToEdit(String categoryId) async {
-    CategoryModel? category =
-        await _firebaseService.getCategoryById(categoryId);
+    CategoryModel? category = await _firebaseService.getCategoryById(categoryId);
     setState(() {
       _category = category;
     });
@@ -90,13 +90,11 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
         children: [
           _buildTaskTitleAndDescription(),
           const SizedBox(height: 30),
-          _buildTaskField(Constants.taskTimeIcon, "Task Time:",
-              DateFormat("dd/MM/yyyy HH:mm").format(_selectedDateTime!)),
           _buildTaskField(
-              Constants.taskCategoryIcon, "Task Category:", _category!),
-          _buildTaskField(Constants.taskPriorityIcon, "Task Priority:",
-              _selectedPriority.toString()),
-          _buildTaskField(Constants.subTaskIcon, "Sub Task:", "Add sub task"),
+              Constants.taskTimeIcon, "task_time_text".tr(), DateFormat("dd/MM/yyyy HH:mm").format(_selectedDateTime!)),
+          _buildTaskField(Constants.taskCategoryIcon, "task_category_text".tr(), _category!),
+          _buildTaskField(Constants.taskPriorityIcon, "task_priority_text".tr(), _selectedPriority.toString()),
+          _buildTaskField(Constants.subTaskIcon, "sub_task_text".tr(), "add_sub_task_text".tr()),
           _buildDeleteButton(),
           const Spacer(),
           _task!.isDone ? Container() : _buildEditButton(),
@@ -125,7 +123,10 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
               ),
               const Spacer(),
               GestureDetector(
-                  onTap: () {}, child: Image.asset(Constants.editIcon)),
+                  onTap: () {
+                    _showDialogEditTask();
+                  },
+                  child: Image.asset(Constants.editIcon)),
             ],
           ),
           const SizedBox(height: 10),
@@ -135,6 +136,145 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
           ),
         ],
       ),
+    );
+  }
+
+  void _showDialogEditTask() {
+    showDialog(
+      context: context,
+      builder: (_) {
+        return Dialog(
+          child: Container(
+            padding: const EdgeInsets.all(15),
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Colors.grey.shade800,
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  "change_name_text".tr(),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                  ),
+                ),
+                Divider(
+                  color: Colors.white.withOpacity(0.5),
+                ),
+                const SizedBox(height: 10),
+                TextFormField(
+                  controller: taskNameController,
+                  style: const TextStyle(
+                    color: Colors.white,
+                  ),
+                  decoration: InputDecoration(
+                    hintText: "enter_task_name_text".tr(),
+                    hintStyle: TextStyle(
+                      color: Colors.white.withOpacity(0.5),
+                      fontSize: 16,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: BorderSide(color: Colors.white.withOpacity(0.5), width: 1),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: BorderSide(color: Colors.white.withOpacity(0.5), width: 1),
+                    ),
+                    fillColor: Colors.grey.withOpacity(0.2),
+                    filled: true,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                TextFormField(
+                  controller: taskDescriptionController,
+                  style: const TextStyle(
+                    color: Colors.white,
+                  ),
+                  decoration: InputDecoration(
+                    hintText: "enter_task_description_text".tr(),
+                    hintStyle: TextStyle(
+                      color: Colors.white.withOpacity(0.5),
+                      fontSize: 16,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: BorderSide(color: Colors.white.withOpacity(0.5), width: 1),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: BorderSide(color: Colors.white.withOpacity(0.5), width: 1),
+                    ),
+                    fillColor: Colors.grey.withOpacity(0.2),
+                    filled: true,
+                  ),
+                ),
+                _buildButtonCancelAndSave(),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildButtonCancelAndSave() {
+    return Container(
+      margin: const EdgeInsets.only(top: 10, left: 20, right: 20),
+      child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Expanded(
+          flex: 1,
+          child: ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.grey.shade700,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(4),
+                ),
+              ),
+            ),
+            child: Text(
+              "cancel_button".tr(),
+              style: const TextStyle(color: Colors.white),
+            ),
+          ),
+        ),
+        const SizedBox(width: 50),
+        Expanded(
+          flex: 1,
+          child: ElevatedButton(
+            onPressed: () {
+              setState(() {
+                _selectedName = taskNameController.text;
+                _selectedDescription = taskDescriptionController.text;
+              });
+              Navigator.pop(context);
+              taskNameController.clear();
+              taskDescriptionController.clear();
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Color(Constants.primaryColor),
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(4),
+                ),
+              ),
+            ),
+            child: Text(
+              "save_button".tr(),
+              style: const TextStyle(color: Colors.white),
+            ),
+          ),
+        ),
+      ]),
     );
   }
 
@@ -152,20 +292,19 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
           const Spacer(),
           GestureDetector(
             onTap: () {
-              if (field == "Task Category:") {
+              if (field == "task_category_text".tr()) {
                 _showDialogChooseCategory();
               }
-              if (field == "Task Priority:") {
+              if (field == "task_priority_text".tr()) {
                 _showDialogChoosePriority();
               }
-              if (field == "Task Time:") {
+              if (field == "task_time_text".tr()) {
                 _selectTaskTime();
               }
             },
             child: value is CategoryModel
                 ? Container(
-                    padding: const EdgeInsets.only(
-                        left: 10, right: 10, top: 5, bottom: 5),
+                    padding: const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
                     height: 30,
                     decoration: BoxDecoration(
                       color: Color(_category!.backgroundColor),
@@ -177,8 +316,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                       children: [
                         Icon(
                           _category!.icon,
-                          color: GlobalFunction.darkenColor(
-                              Color(_category!.backgroundColor)),
+                          color: GlobalFunction.darkenColor(Color(_category!.backgroundColor)),
                           size: 20,
                         ),
                         const SizedBox(width: 4),
@@ -194,8 +332,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                     ),
                   )
                 : Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 15, vertical: 15),
+                    padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
                     decoration: BoxDecoration(
                       color: Colors.grey.shade800,
                       borderRadius: BorderRadius.circular(4),
@@ -302,9 +439,10 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
           context: context,
           builder: (context) {
             return AlertDialog(
-              title: const Text(
-                "Are you sure you want to delete this task?",
-                style: TextStyle(fontSize: 16),
+              backgroundColor: Colors.grey.shade800,
+              title: Text(
+                "confirm_delete_task_message".tr(),
+                style: const TextStyle(fontSize: 18, color: Colors.white),
               ),
               actions: [
                 TextButton(
@@ -312,11 +450,16 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                     // dismiss the dialog
                     Navigator.pop(context);
                   },
-                  child: const Text("Cancel"),
+                  child: Text("cancel_button".tr(), style: const TextStyle(color: Colors.white)),
                 ),
-                const TextButton(
-                  onPressed: null,
-                  child: Text("Delete"),
+                TextButton(
+                  onPressed: () {
+                    context.read<HomePageCubit>().deleteTask(_task!.id);
+                    context.read<HomePageCubit>().onQueryTasksByDate(_task!.dateTime);
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  },
+                  child: Text("delete_button".tr(), style: const TextStyle(color: Colors.red)),
                 ),
               ],
             );
@@ -349,10 +492,14 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
           if (_category == null) {
             return;
           }
+          final oldDateTime = _task?.dateTime;
           _task?.categoryId = _category!.id;
           _task?.dateTime = _selectedDateTime!;
           _task?.priority = _selectedPriority!;
+          _task?.name = _selectedName!;
+          _task?.description = _selectedDescription!;
           context.read<HomePageCubit>().updateTask(_task!);
+          context.read<HomePageCubit>().onQueryTasksByDate(oldDateTime!);
           Navigator.pop(context);
         },
         style: ElevatedButton.styleFrom(

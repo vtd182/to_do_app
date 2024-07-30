@@ -1,5 +1,4 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:to_do_app/constants/constants.dart';
 import 'package:to_do_app/ui/register/register_page.dart';
@@ -107,9 +106,9 @@ class WelcomePage extends StatelessWidget {
               borderRadius: BorderRadius.all(Radius.circular(4)),
             ),
           ),
-          child: const Text(
-            'LOGIN',
-            style: TextStyle(color: Colors.white),
+          child: Text(
+            "login_text".tr(),
+            style: const TextStyle(color: Colors.white),
           ),
         ));
   }
@@ -133,43 +132,9 @@ class WelcomePage extends StatelessWidget {
             ),
           ),
         ),
-        child: const Text(
-          'CREATE ACCOUNT',
-          style: TextStyle(color: Colors.white),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildChangeLanguageButton(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
-      height: 48,
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed: () {
-          FirebaseAuth.instance.signOut();
-          // change language
-          final currentLocale = context.locale;
-          if (currentLocale == const Locale('en')) {
-            context.setLocale(const Locale('vi'));
-          } else {
-            context.setLocale(const Locale('en'));
-          }
-        },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.transparent,
-          shape: RoundedRectangleBorder(
-            borderRadius: const BorderRadius.all(Radius.circular(4)),
-            side: BorderSide(
-              color: Color(Constants.primaryColor),
-              width: 1,
-            ),
-          ),
-        ),
-        child: const Text(
-          'Change language',
-          style: TextStyle(color: Colors.white),
+        child: Text(
+          "create_account_text".tr(),
+          style: const TextStyle(color: Colors.white),
         ),
       ),
     );

@@ -2,6 +2,10 @@
   "ok_button": "OK",
   "cancel_button": "Hủy",
   "save_button": "Tạo",
+  "edit_button": "Chỉnh sửa",
+  "delete_button": "Xóa",
+  "cancel_edit_button": "Hủy chỉnh sửa",
+  "create_new_button": "Tạo mới",
   "welcome_title": "Chào mừng đến với Super to-do app",
   "welcome_description": "Vui lòng đăng nhập vào tài khoản hoặc tạo tài khoản mới để sử dụng ứng dụng",
   "create_category_page_title": "Tạo danh mục",
@@ -15,6 +19,7 @@
   "create_category_form_create_button": "Tạo",
   "create_category_form_category_name_empty": "Tên danh mục rỗng",
   "edit_category_page_title":"Chỉnh sửa danh mục",
+  "confirm_delete_task_message": "Bạn có chắc chắn muốn xóa công việc này?",
 
 
 
@@ -42,5 +47,33 @@
   "buy_me_a_coffee_text": "Ủng hộ chúng tôi",
   "logout_text": "Đăng xuất",
   "english_text": "Tiếng Anh",
-  "vietnamese_text": "Tiếng Việt"
+  "vietnamese_text": "Tiếng Việt",
+
+  "create_account_text": "Tạo tài khoản",
+  "login_text": "Đăng nhập",
+  "add_task_text": "Tạo công việc",
+  "enter_task_name_text": "Tên công việc",
+  "task_description_text": "Mô tả",
+  "enter_task_description_text": "Nhập mô tả",
+  "category_text": "Danh mục",
+  "date_time_text": "Thời gian",
+  "priority_text": "Độ ưu tiên",
+  "task_time_text": "Thời gian",
+  "task_priority_text": "Độ ưu tiên",
+  "add_sub_task_text": "Thêm công việc phụ",
+  "task_category_text": "Danh mục",
+  "sub_task_text": "Công việc phụ",
+  "choose_category_text": "Chọn danh mục",
+  "choose_priority_text": "Chọn độ ưu tiên",
+  "task_left_text": "việc còn lại",
+  "task_completed_text": "việc hoàn thành",
+  "change_name_text": "Thay đổi tên",
+  "enter_your_name_text": "Nhập tên",
+  "today_text": "Hôm nay",
+  "tomorrow_text": "Ngày mai",
+  "search_for_your_task_text" : "Tìm kiếm công việc",
+  "calendar_page_title": "Lịch",
+  "uncompleted_text": "Chưa hoàn thành",
+  "completed_text": "Đã hoàn thành",
+  "task_create_success": "Công việc đã được tạo thành công"
 }

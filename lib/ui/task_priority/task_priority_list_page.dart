@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../../constants/constants.dart';
@@ -48,9 +49,9 @@ class _TaskPriorityListPageState extends State<TaskPriorityListPage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Text(
-              "Choose category",
-              style: TextStyle(
+            Text(
+              "choose_priority_text".tr(),
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 16,
               ),
@@ -102,8 +103,7 @@ class _TaskPriorityListPageState extends State<TaskPriorityListPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset(Constants.taskPriorityIcon,
-                  width: 24, height: 24, fit: BoxFit.fill),
+              Image.asset(Constants.taskPriorityIcon, width: 24, height: 24, fit: BoxFit.fill),
               Text(
                 priority.toString(),
                 style: const TextStyle(
@@ -137,9 +137,9 @@ class _TaskPriorityListPageState extends State<TaskPriorityListPage> {
                 ),
               ),
             ),
-            child: const Text(
-              "Cancel",
-              style: TextStyle(color: Colors.white),
+            child: Text(
+              "cancel_button".tr(),
+              style: const TextStyle(color: Colors.white),
             ),
           ),
         ),
@@ -158,9 +158,9 @@ class _TaskPriorityListPageState extends State<TaskPriorityListPage> {
                 ),
               ),
             ),
-            child: const Text(
-              "Save",
-              style: TextStyle(color: Colors.white),
+            child: Text(
+              "save_button".tr(),
+              style: const TextStyle(color: Colors.white),
             ),
           ),
         ),

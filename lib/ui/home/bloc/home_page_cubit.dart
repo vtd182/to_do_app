@@ -20,6 +20,7 @@ class HomePageCubit extends Cubit<HomePageState> {
     final categories = await firebaseService.getCategories();
     final completedTasks = tasks.where((task) => task.isDone).toList();
     final incompleteTasks = tasks.where((task) => !task.isDone).toList();
+
     emit(state.copyWith(
       tasks: tasks,
       completedTasks: completedTasks,
@@ -33,6 +34,7 @@ class HomePageCubit extends Cubit<HomePageState> {
     final categories = await firebaseService.getCategories();
     final completedTasks = tasks.where((task) => task.isDone).toList();
     final incompleteTasks = tasks.where((task) => !task.isDone).toList();
+
     emit(state.copyWith(
       tasks: tasks,
       completedTasks: completedTasks,
@@ -80,5 +82,17 @@ class HomePageCubit extends Cubit<HomePageState> {
       }
     }
     return categoryModel;
+  }
+
+  void onQueryTasksByDate(DateTime dateTime) async {
+    final completedTasks =
+        await firebaseService.getCompletedTasksByDate(dateTime);
+    final incompleteTasks =
+        await firebaseService.getUncompletedTasksByDate(dateTime);
+    emit(
+      state.copyWith(
+          completedTasksByDate: completedTasks,
+          incompleteTasksByDate: incompleteTasks),
+    );
   }
 }

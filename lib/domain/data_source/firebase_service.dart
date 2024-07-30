@@ -12,6 +12,10 @@ class FirebaseService {
     databaseURL: MyFirebaseOptions.databaseUrl,
   ).ref();
 
+  FirebaseService() {
+    print('FirebaseService created');
+  }
+
   // add category with id
   Future<void> addCategory(CategoryModel category) async {
     await _database.child('categories/${category.id}').set(category.toMap());
@@ -117,8 +121,95 @@ class FirebaseService {
     return tasks;
   }
 
-  // delete task
+  // delete category
   Future<void> deleteCategory(String id) async {
     await _database.child('categories/$id').remove();
+  }
+
+  // Get completed tasks by date
+  Future<List<TaskModel>> getCompletedTasksByDate(DateTime date) async {
+    String userId = FirebaseAuth.instance.currentUser!.uid;
+    Query query =
+        _database.child('tasks').orderByChild('userId').equalTo(userId);
+    DataSnapshot snapshot = (await query.once()).snapshot;
+    Map<dynamic, dynamic> data = snapshot.value as Map<dynamic, dynamic>;
+    List<TaskModel> tasks = [];
+    DateTime startOfDay = DateTime(date.year, date.month, date.day, 0, 0, 0);
+    DateTime endOfDay = DateTime(date.year, date.month, date.day, 23, 59, 59);
+
+    data.forEach((key, value) {
+      Map<String, dynamic> taskData = Map<String, dynamic>.from(value);
+      DateTime taskDateTime;
+
+      if (taskData['dateTime'] is int) {
+        taskDateTime =
+            DateTime.fromMillisecondsSinceEpoch(taskData['dateTime']);
+      } else {
+        taskDateTime = DateTime.parse(taskData['dateTime']);
+      }
+
+      if (taskData['isDone'] == true &&
+          taskDateTime.isAfter(startOfDay) &&
+          taskDateTime.isBefore(endOfDay)) {
+        tasks.add(
+          TaskModel.fromMap(
+            {
+              'id': key,
+              'name': taskData['name'],
+              'description': taskData['description'],
+              'categoryId': taskData['categoryId'],
+              'dateTime': taskData['dateTime'],
+              'priority': taskData['priority'],
+              'isDone': taskData['isDone'],
+              'userId': taskData['userId'],
+            },
+          ),
+        );
+      }
+    });
+    return tasks;
+  }
+
+  // Get uncompleted tasks by date
+  Future<List<TaskModel>> getUncompletedTasksByDate(DateTime date) async {
+    String userId = FirebaseAuth.instance.currentUser!.uid;
+    Query query =
+        _database.child('tasks').orderByChild('userId').equalTo(userId);
+    DataSnapshot snapshot = (await query.once()).snapshot;
+    Map<dynamic, dynamic> data = snapshot.value as Map<dynamic, dynamic>;
+    List<TaskModel> tasks = [];
+    DateTime startOfDay = DateTime(date.year, date.month, date.day, 0, 0, 0);
+    DateTime endOfDay = DateTime(date.year, date.month, date.day, 23, 59, 59);
+
+    data.forEach((key, value) {
+      Map<String, dynamic> taskData = Map<String, dynamic>.from(value);
+      DateTime taskDateTime;
+
+      if (taskData['dateTime'] is int) {
+        taskDateTime =
+            DateTime.fromMillisecondsSinceEpoch(taskData['dateTime']);
+      } else {
+        taskDateTime = DateTime.parse(taskData['dateTime']);
+      }
+      if (taskData['isDone'] == false &&
+          taskDateTime.isAfter(startOfDay) &&
+          taskDateTime.isBefore(endOfDay)) {
+        tasks.add(
+          TaskModel.fromMap(
+            {
+              'id': key,
+              'name': taskData['name'],
+              'description': taskData['description'],
+              'categoryId': taskData['categoryId'],
+              'dateTime': taskData['dateTime'],
+              'priority': taskData['priority'],
+              'isDone': taskData['isDone'],
+              'userId': taskData['userId'],
+            },
+          ),
+        );
+      }
+    });
+    return tasks;
   }
 }

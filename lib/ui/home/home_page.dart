@@ -17,8 +17,8 @@ class HomePage extends StatelessWidget {
     return BlocBuilder<HomePageCubit, HomePageState>(
       builder: (context, state) {
         return HomePageView(
-          incompletedTasks: state.incompleteTasks,
-          completedTasks: state.completedTasks,
+          incompletedTasks: state.incompleteTasksByDate,
+          completedTasks: state.completedTasksByDate,
         );
       },
     );
@@ -40,12 +40,13 @@ class HomePageView extends StatefulWidget {
 }
 
 class _HomePageViewState extends State<HomePageView> {
-  var dropDownValue = "Today";
-  var dropDownItem = ["Today", "Tomorrow", "All"];
+  var dropDownValue = "today_text".tr();
+  var dropDownItem = ["today_text".tr(), "tomorrow_text".tr()];
 
   @override
   void initState() {
     super.initState();
+    context.read<HomePageCubit>().onQueryTasksByDate(DateTime.now());
   }
 
   @override
@@ -76,11 +77,11 @@ class _HomePageViewState extends State<HomePageView> {
         _buildDropDownButtonFilter(),
         const SizedBox(height: 15),
         _buildListTask(widget.incompletedTasks),
-        Text(
-          "Completed tasks: ${widget.completedTasks.length}",
-          style: const TextStyle(color: Colors.white),
-        ),
-        _buildListTask(widget.completedTasks),
+        // Text(
+        //   "Completed tasks: ${widget.completedTasks.length}",
+        //   style: const TextStyle(color: Colors.white),
+        // ),
+        // _buildListTask(widget.completedTasks),
       ],
     );
   }
@@ -96,14 +97,14 @@ class _HomePageViewState extends State<HomePageView> {
           width: 1,
         ),
       ),
-      child: const TextField(
+      child: TextField(
         decoration: InputDecoration(
-          hintText: "Search for your task...",
-          hintStyle: TextStyle(
+          hintText: "${"search_for_your_task_text".tr()}...",
+          hintStyle: const TextStyle(
             color: Colors.white54,
             fontSize: 18,
           ),
-          prefixIcon: Icon(
+          prefixIcon: const Icon(
             Icons.search,
             color: Colors.white54,
           ),
@@ -134,6 +135,9 @@ class _HomePageViewState extends State<HomePageView> {
           setState(
             () {
               dropDownValue = value!;
+              final date =
+                  dropDownValue == "today_text".tr() ? DateTime.now() : DateTime.now().add(const Duration(days: 1));
+              context.read<HomePageCubit>().onQueryTasksByDate(date);
             },
           );
         },
@@ -165,8 +169,7 @@ class _HomePageViewState extends State<HomePageView> {
   }
 
   Widget _buildListTaskItem(TaskModel taskModel) {
-    CategoryModel? category =
-        context.read<HomePageCubit>().findCategory(taskModel.categoryId);
+    CategoryModel? category = context.read<HomePageCubit>().findCategory(taskModel.categoryId);
     return GestureDetector(
       onTap: () {
         Navigator.of(context).pushNamed(
@@ -190,6 +193,9 @@ class _HomePageViewState extends State<HomePageView> {
                 setState(() {
                   taskModel.isDone = value ?? false;
                   context.read<HomePageCubit>().updateTask(taskModel);
+                  final date =
+                      dropDownValue == "today_text".tr() ? DateTime.now() : DateTime.now().add(const Duration(days: 1));
+                  context.read<HomePageCubit>().onQueryTasksByDate(date);
                 });
                 // Cập nhật taskModel vào cơ sở dữ liệu
               },
@@ -225,13 +231,10 @@ class _HomePageViewState extends State<HomePageView> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Container(
-                    padding: const EdgeInsets.only(
-                        left: 10, right: 10, top: 5, bottom: 5),
+                    padding: const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
                     height: 30,
                     decoration: BoxDecoration(
-                      color: category == null
-                          ? Colors.grey
-                          : Color(category.backgroundColor),
+                      color: category == null ? Colors.grey : Color(category.backgroundColor),
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Row(
@@ -242,8 +245,7 @@ class _HomePageViewState extends State<HomePageView> {
                           category == null ? Icons.category : category.icon,
                           color: category == null
                               ? Colors.white
-                              : GlobalFunction.darkenColor(
-                                  Color(category.backgroundColor)),
+                              : GlobalFunction.darkenColor(Color(category.backgroundColor)),
                           size: 20,
                         ),
                         const SizedBox(width: 4),
@@ -271,8 +273,7 @@ class _HomePageViewState extends State<HomePageView> {
                     ),
                     child: Row(
                       children: [
-                        Image.asset(Constants.taskPriorityIcon,
-                            width: 20, height: 20, fit: BoxFit.fill),
+                        Image.asset(Constants.taskPriorityIcon, width: 20, height: 20, fit: BoxFit.fill),
                         const SizedBox(width: 4),
                         Text(
                           taskModel.priority.toString(),

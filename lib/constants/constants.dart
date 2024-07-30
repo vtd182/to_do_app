@@ -33,5 +33,6 @@ class Constants {
   static String calendarIconFill = "assets/images/ic_calendar_fill.png";
   static String homeIconFill = "assets/images/ic_home_fill.png";
   static String homeIcon = "assets/images/ic_home_outline.png";
+  static String profileIconFill = "assets/images/ic_profile_fill.png";
   static int primaryColor = 0xff8687E7;
 }

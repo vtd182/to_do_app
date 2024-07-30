@@ -49,7 +49,6 @@ class _SplashScreenState extends State<SplashScreen> {
   void redirectToWelcomePage() async {
     await Future.delayed(const Duration(seconds: 3));
     if (!mounted) return;
-    print('Redirect to welcome page');
     Navigator.of(context).pushNamed(WelcomePage.route, arguments: false);
   }
 
@@ -90,7 +89,7 @@ Widget _buildTextSplash() {
   return Container(
     margin: const EdgeInsets.only(top: 10),
     child: const Text(
-      'UpToDo',
+      'To-Do App',
       style: TextStyle(
         color: Colors.white,
         fontSize: 40,

@@ -1,16 +1,28 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:to_do_app/constants/constants.dart';
 
-class SettingPage extends StatefulWidget {
+import '../../app/language_cubit.dart';
+
+class SettingPage extends StatelessWidget {
   static const route = '/settings_page';
   const SettingPage({super.key});
 
   @override
-  State<SettingPage> createState() => _SettingPageState();
+  Widget build(BuildContext context) {
+    return const SettingPageView();
+  }
 }
 
-class _SettingPageState extends State<SettingPage> {
+class SettingPageView extends StatefulWidget {
+  const SettingPageView({super.key});
+
+  @override
+  State<SettingPageView> createState() => _SettingPageViewState();
+}
+
+class _SettingPageViewState extends State<SettingPageView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -148,8 +160,10 @@ class _SettingPageState extends State<SettingPage> {
     Navigator.of(context).pop();
     if (languageCode == 'en') {
       context.setLocale(const Locale('en'));
+      context.read<LanguageCubit>().changeLanguage(const Locale('en'));
     } else {
       context.setLocale(const Locale('vi'));
+      context.read<LanguageCubit>().changeLanguage(const Locale('vi'));
     }
   }
 }

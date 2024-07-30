@@ -5,12 +5,16 @@ class HomePageState extends Equatable {
   final List<TaskModel> completedTasks;
   final List<TaskModel> incompleteTasks;
   final List<CategoryModel> categories;
+  final List<TaskModel> completedTasksByDate;
+  final List<TaskModel> incompleteTasksByDate;
 
   const HomePageState({
     this.tasks = const [],
     this.completedTasks = const [],
     this.incompleteTasks = const [],
     this.categories = const [],
+    this.completedTasksByDate = const [],
+    this.incompleteTasksByDate = const [],
   });
 
   HomePageState copyWith({
@@ -18,12 +22,17 @@ class HomePageState extends Equatable {
     List<TaskModel>? completedTasks,
     List<TaskModel>? incompleteTasks,
     List<CategoryModel>? categories,
+    List<TaskModel>? completedTasksByDate,
+    List<TaskModel>? incompleteTasksByDate,
   }) {
     return HomePageState(
       tasks: tasks ?? this.tasks,
       completedTasks: completedTasks ?? this.completedTasks,
       incompleteTasks: incompleteTasks ?? this.incompleteTasks,
       categories: categories ?? this.categories,
+      completedTasksByDate: completedTasksByDate ?? this.completedTasksByDate,
+      incompleteTasksByDate:
+          incompleteTasksByDate ?? this.incompleteTasksByDate,
     );
   }
 
@@ -33,5 +42,7 @@ class HomePageState extends Equatable {
         completedTasks,
         incompleteTasks,
         categories,
+        completedTasksByDate,
+        incompleteTasksByDate,
       ];
 }

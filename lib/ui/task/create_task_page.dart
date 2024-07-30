@@ -77,9 +77,9 @@ class _CreateTaskPageViewState extends State<CreateTaskPageView> {
   }
 
   Widget _buildTextTitle() {
-    return const Text(
-      "Add Task",
-      style: TextStyle(color: Colors.white, fontSize: 20),
+    return Text(
+      "add_task_text".tr(),
+      style: const TextStyle(color: Colors.white, fontSize: 20),
     );
   }
 
@@ -93,20 +93,18 @@ class _CreateTaskPageViewState extends State<CreateTaskPageView> {
             color: Colors.white,
           ),
           decoration: InputDecoration(
-            hintText: 'Enter Task name',
+            hintText: "enter_task_name_text".tr(),
             hintStyle: TextStyle(
               color: Colors.white.withOpacity(0.5),
               fontSize: 18,
             ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(5),
-              borderSide:
-                  BorderSide(color: Colors.white.withOpacity(0.5), width: 1),
+              borderSide: BorderSide(color: Colors.white.withOpacity(0.5), width: 1),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(5),
-              borderSide:
-                  BorderSide(color: Colors.white.withOpacity(0.5), width: 1),
+              borderSide: BorderSide(color: Colors.white.withOpacity(0.5), width: 1),
             ),
             fillColor: Colors.grey.withOpacity(0.2),
             filled: true,
@@ -123,7 +121,7 @@ class _CreateTaskPageViewState extends State<CreateTaskPageView> {
           Container(
             alignment: Alignment.centerLeft,
             child: Text(
-              'Description',
+              "task_description_text".tr(),
               style: TextStyle(
                 color: Colors.white.withOpacity(0.5),
                 fontSize: 18,
@@ -138,20 +136,18 @@ class _CreateTaskPageViewState extends State<CreateTaskPageView> {
                 color: Colors.white,
               ),
               decoration: InputDecoration(
-                hintText: 'Enter Task description',
+                hintText: "enter_task_description_text".tr(),
                 hintStyle: TextStyle(
                   color: Colors.white.withOpacity(0.5),
                   fontSize: 18,
                 ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(5),
-                  borderSide: BorderSide(
-                      color: Colors.white.withOpacity(0.5), width: 1),
+                  borderSide: BorderSide(color: Colors.white.withOpacity(0.5), width: 1),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(5),
-                  borderSide: BorderSide(
-                      color: Colors.white.withOpacity(0.5), width: 1),
+                  borderSide: BorderSide(color: Colors.white.withOpacity(0.5), width: 1),
                 ),
                 fillColor: Colors.grey.withOpacity(0.2),
                 filled: true,
@@ -168,7 +164,7 @@ class _CreateTaskPageViewState extends State<CreateTaskPageView> {
       child: Column(
         children: [
           Text(
-            'Category',
+            "category_text".tr(),
             style: TextStyle(
               color: Colors.white.withOpacity(0.5),
               fontSize: 18,
@@ -212,7 +208,7 @@ class _CreateTaskPageViewState extends State<CreateTaskPageView> {
       child: Row(
         children: [
           Text(
-            'Date time',
+            "date_time_text".tr(),
             style: TextStyle(
               color: Colors.white.withOpacity(0.5),
               fontSize: 18,
@@ -238,15 +234,14 @@ class _CreateTaskPageViewState extends State<CreateTaskPageView> {
       child: Row(
         children: [
           Text(
-            'Priority',
+            "priority_text".tr(),
             style: TextStyle(
               color: Colors.white.withOpacity(0.5),
               fontSize: 18,
             ),
           ),
           const SizedBox(width: 20),
-          Image.asset(Constants.taskPriorityIcon,
-              width: 20, height: 20, fit: BoxFit.fill),
+          Image.asset(Constants.taskPriorityIcon, width: 20, height: 20, fit: BoxFit.fill),
           const SizedBox(width: 4),
           Text(
             // format date time
@@ -405,9 +400,7 @@ class _CreateTaskPageViewState extends State<CreateTaskPageView> {
     }
 
     final newTask = TaskModel(
-      id: DateTime.now()
-          .microsecondsSinceEpoch
-          .toString(), // Tạo id duy nhất cho task
+      id: DateTime.now().microsecondsSinceEpoch.toString(), // Tạo id duy nhất cho task
       name: _nameTaskTextController.text,
       description: _descriptionTaskTextController.text,
       categoryId: _selectedCategory!.id,
@@ -417,5 +410,13 @@ class _CreateTaskPageViewState extends State<CreateTaskPageView> {
     );
 
     context.read<HomePageCubit>().addTask(newTask);
+    context.read<HomePageCubit>().onQueryTasksByDate(DateTime.now());
+    Navigator.pop(context);
+    // snackbar
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("task_create_success".tr()),
+      ),
+    );
   }
 }
