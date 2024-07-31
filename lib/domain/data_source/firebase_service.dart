@@ -12,10 +12,6 @@ class FirebaseService {
     databaseURL: MyFirebaseOptions.databaseUrl,
   ).ref();
 
-  FirebaseService() {
-    print('FirebaseService created');
-  }
-
   // add category with id
   Future<void> addCategory(CategoryModel category) async {
     await _database.child('categories/${category.id}').set(category.toMap());
@@ -23,8 +19,7 @@ class FirebaseService {
 
   // get category by id
   Future<CategoryModel?> getCategoryById(String id) async {
-    DataSnapshot snapshot =
-        (await _database.child('categories/$id').once()).snapshot;
+    DataSnapshot snapshot = (await _database.child('categories/$id').once()).snapshot;
     if (snapshot.value == null) return null;
 
     // Explicitly converting the data to Map<String, dynamic>
@@ -40,9 +35,10 @@ class FirebaseService {
 
   Future<List<CategoryModel>> getCategories() async {
     String userId = FirebaseAuth.instance.currentUser!.uid;
-    Query query =
-        _database.child('categories').orderByChild('userId').equalTo(userId);
+    Query query = _database.child('categories').orderByChild('userId').equalTo(userId);
     DataSnapshot snapshot = (await query.once()).snapshot;
+    // check null
+    if (snapshot.value == null) return [];
     Map<dynamic, dynamic> data = snapshot.value as Map<dynamic, dynamic>;
     List<CategoryModel> categories = [];
     data.forEach(
@@ -53,8 +49,7 @@ class FirebaseService {
             {
               'id': key,
               'name': categoryData['name'],
-              'icon': categoryData[
-                  'icon'], // Assuming 'icon' is already serialized correctly
+              'icon': categoryData['icon'], // Assuming 'icon' is already serialized correctly
               'backgroundColor': categoryData['backgroundColor'],
               'iconColor': categoryData['iconColor'],
               'userId': categoryData['userId'],
@@ -78,8 +73,7 @@ class FirebaseService {
 
   // get task by id
   Future<TaskModel?> getTaskById(String id) async {
-    DataSnapshot snapshot =
-        (await _database.child('tasks/$id').once()).snapshot;
+    DataSnapshot snapshot = (await _database.child('tasks/$id').once()).snapshot;
     if (snapshot.value == null) return null;
     // Explicitly converting the data to Map<String, dynamic>
     final data = Map<String, dynamic>.from(snapshot.value as Map);
@@ -94,9 +88,10 @@ class FirebaseService {
   // get tasks of userid
   Future<List<TaskModel>> getTasks() async {
     String userId = FirebaseAuth.instance.currentUser!.uid;
-    Query query =
-        _database.child('tasks').orderByChild('userId').equalTo(userId);
+    Query query = _database.child('tasks').orderByChild('userId').equalTo(userId);
     DataSnapshot snapshot = (await query.once()).snapshot;
+    // check null
+    if (snapshot.value == null) return [];
     Map<dynamic, dynamic> data = snapshot.value as Map<dynamic, dynamic>;
     List<TaskModel> tasks = [];
     data.forEach(
@@ -129,9 +124,10 @@ class FirebaseService {
   // Get completed tasks by date
   Future<List<TaskModel>> getCompletedTasksByDate(DateTime date) async {
     String userId = FirebaseAuth.instance.currentUser!.uid;
-    Query query =
-        _database.child('tasks').orderByChild('userId').equalTo(userId);
+    Query query = _database.child('tasks').orderByChild('userId').equalTo(userId);
     DataSnapshot snapshot = (await query.once()).snapshot;
+    // check null
+    if (snapshot.value == null) return [];
     Map<dynamic, dynamic> data = snapshot.value as Map<dynamic, dynamic>;
     List<TaskModel> tasks = [];
     DateTime startOfDay = DateTime(date.year, date.month, date.day, 0, 0, 0);
@@ -142,15 +138,12 @@ class FirebaseService {
       DateTime taskDateTime;
 
       if (taskData['dateTime'] is int) {
-        taskDateTime =
-            DateTime.fromMillisecondsSinceEpoch(taskData['dateTime']);
+        taskDateTime = DateTime.fromMillisecondsSinceEpoch(taskData['dateTime']);
       } else {
         taskDateTime = DateTime.parse(taskData['dateTime']);
       }
 
-      if (taskData['isDone'] == true &&
-          taskDateTime.isAfter(startOfDay) &&
-          taskDateTime.isBefore(endOfDay)) {
+      if (taskData['isDone'] == true && taskDateTime.isAfter(startOfDay) && taskDateTime.isBefore(endOfDay)) {
         tasks.add(
           TaskModel.fromMap(
             {
@@ -173,27 +166,27 @@ class FirebaseService {
   // Get uncompleted tasks by date
   Future<List<TaskModel>> getUncompletedTasksByDate(DateTime date) async {
     String userId = FirebaseAuth.instance.currentUser!.uid;
-    Query query =
-        _database.child('tasks').orderByChild('userId').equalTo(userId);
+    Query query = _database.child('tasks').orderByChild('userId').equalTo(userId);
     DataSnapshot snapshot = (await query.once()).snapshot;
+    // check null
+    if (snapshot.value == null) return [];
     Map<dynamic, dynamic> data = snapshot.value as Map<dynamic, dynamic>;
     List<TaskModel> tasks = [];
     DateTime startOfDay = DateTime(date.year, date.month, date.day, 0, 0, 0);
     DateTime endOfDay = DateTime(date.year, date.month, date.day, 23, 59, 59);
 
+    // check null
+    if (snapshot.value == null) return [];
     data.forEach((key, value) {
       Map<String, dynamic> taskData = Map<String, dynamic>.from(value);
       DateTime taskDateTime;
 
       if (taskData['dateTime'] is int) {
-        taskDateTime =
-            DateTime.fromMillisecondsSinceEpoch(taskData['dateTime']);
+        taskDateTime = DateTime.fromMillisecondsSinceEpoch(taskData['dateTime']);
       } else {
         taskDateTime = DateTime.parse(taskData['dateTime']);
       }
-      if (taskData['isDone'] == false &&
-          taskDateTime.isAfter(startOfDay) &&
-          taskDateTime.isBefore(endOfDay)) {
+      if (taskData['isDone'] == false && taskDateTime.isAfter(startOfDay) && taskDateTime.isBefore(endOfDay)) {
         tasks.add(
           TaskModel.fromMap(
             {
@@ -211,5 +204,10 @@ class FirebaseService {
       }
     });
     return tasks;
+  }
+
+  // clear all data
+  Future<void> clearAllData() async {
+    await _database.ref.remove();
   }
 }

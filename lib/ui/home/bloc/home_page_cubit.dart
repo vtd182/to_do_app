@@ -10,8 +10,7 @@ part 'home_page_state.dart';
 class HomePageCubit extends Cubit<HomePageState> {
   final FirebaseService firebaseService;
 
-  HomePageCubit({required this.firebaseService})
-      : super(const HomePageState()) {
+  HomePageCubit({required this.firebaseService}) : super(const HomePageState()) {
     _initialize();
   }
 
@@ -73,6 +72,11 @@ class HomePageCubit extends Cubit<HomePageState> {
     _initialize();
   }
 
+  // clear when sigout
+  void clear() async {
+    await firebaseService.clearAllData();
+  }
+
   CategoryModel? findCategory(String categoryId) {
     CategoryModel? categoryModel;
     for (var category in state.categories) {
@@ -85,14 +89,10 @@ class HomePageCubit extends Cubit<HomePageState> {
   }
 
   void onQueryTasksByDate(DateTime dateTime) async {
-    final completedTasks =
-        await firebaseService.getCompletedTasksByDate(dateTime);
-    final incompleteTasks =
-        await firebaseService.getUncompletedTasksByDate(dateTime);
+    final completedTasks = await firebaseService.getCompletedTasksByDate(dateTime);
+    final incompleteTasks = await firebaseService.getUncompletedTasksByDate(dateTime);
     emit(
-      state.copyWith(
-          completedTasksByDate: completedTasks,
-          incompleteTasksByDate: incompleteTasks),
+      state.copyWith(completedTasksByDate: completedTasks, incompleteTasksByDate: incompleteTasks),
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,8 +30,7 @@ class RegisterPage extends StatelessWidget {
       ),
       body: BlocProvider(
         create: (context) {
-          final authenticationRepository =
-              context.read<AuthenticationRepository>();
+          final authenticationRepository = context.read<AuthenticationRepository>();
           return RegisterCubit(
             authenticationRepository: authenticationRepository,
           );
@@ -122,9 +122,9 @@ class _RegisterPageViewState extends State<RegisterPageView> {
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
       alignment: Alignment.centerLeft,
-      child: const Text(
-        'REGISTER',
-        style: TextStyle(
+      child: Text(
+        "register_text".tr().toUpperCase(),
+        style: const TextStyle(
           color: Colors.white,
           fontSize: 40,
           fontWeight: FontWeight.bold,
@@ -141,9 +141,9 @@ class _RegisterPageViewState extends State<RegisterPageView> {
         children: [
           Container(
             alignment: Alignment.centerLeft,
-            child: const Text(
-              'Username',
-              style: TextStyle(
+            child: Text(
+              "username_text".tr(),
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 16,
               ),
@@ -155,11 +155,11 @@ class _RegisterPageViewState extends State<RegisterPageView> {
               controller: _emailTextController,
               validator: (String? value) {
                 if (value == null || value.isEmpty) {
-                  return 'Please enter some text';
+                  return "please_enter_some_text".tr();
                 }
                 final emailValid = RegExp(Constants.emailRegex).hasMatch(value);
                 if (!emailValid) {
-                  return 'Please enter a valid email';
+                  return "please_enter_a_valid_email".tr();
                 }
                 return null;
               },
@@ -167,7 +167,7 @@ class _RegisterPageViewState extends State<RegisterPageView> {
                 color: Colors.white,
               ),
               decoration: InputDecoration(
-                hintText: 'Enter your username',
+                hintText: "enter_your_username_or_email".tr(),
                 hintStyle: TextStyle(
                   color: Colors.white.withOpacity(0.5),
                   fontSize: 16,
@@ -193,9 +193,9 @@ class _RegisterPageViewState extends State<RegisterPageView> {
         children: [
           Container(
             alignment: Alignment.centerLeft,
-            child: const Text(
-              'Password',
-              style: TextStyle(
+            child: Text(
+              "password_text".tr(),
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 16,
               ),
@@ -207,10 +207,10 @@ class _RegisterPageViewState extends State<RegisterPageView> {
               controller: _passwordTextController,
               validator: (String? value) {
                 if (value == null || value.isEmpty) {
-                  return 'Please enter some text';
+                  return "please_enter_some_text".tr();
                 }
                 if (value.length < 6) {
-                  return 'Password must be at least 6 characters';
+                  return "password_must_be_at_least_6_characters".tr();
                 }
                 return null;
               },
@@ -219,7 +219,7 @@ class _RegisterPageViewState extends State<RegisterPageView> {
                 color: Colors.white,
               ),
               decoration: InputDecoration(
-                hintText: 'Enter your password',
+                hintText: "enter_your_password".tr(),
                 hintStyle: TextStyle(
                   color: Colors.white.withOpacity(0.5),
                   fontSize: 16,
@@ -245,9 +245,9 @@ class _RegisterPageViewState extends State<RegisterPageView> {
         children: [
           Container(
             alignment: Alignment.centerLeft,
-            child: const Text(
-              'Confirm Password',
-              style: TextStyle(
+            child: Text(
+              "confirm_password_text".tr(),
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 16,
               ),
@@ -259,13 +259,13 @@ class _RegisterPageViewState extends State<RegisterPageView> {
               controller: _confirmPasswordTextController,
               validator: (String? value) {
                 if (value == null || value.isEmpty) {
-                  return 'Please enter some text';
+                  return "please_enter_some_text".tr();
                 }
                 if (value.length < 6) {
-                  return 'Password must be at least 6 characters';
+                  return "password_must_be_at_least_6_characters".tr();
                 }
                 if (value != _passwordTextController.text) {
-                  return 'Passwords do not match';
+                  return "password_does_not_match".tr();
                 }
                 return null;
               },
@@ -274,7 +274,7 @@ class _RegisterPageViewState extends State<RegisterPageView> {
                 color: Colors.white,
               ),
               decoration: InputDecoration(
-                hintText: 'Confirm password',
+                hintText: "confirm_password_text".tr(),
                 hintStyle: TextStyle(
                   color: Colors.white.withOpacity(0.5),
                   fontSize: 16,
@@ -307,9 +307,9 @@ class _RegisterPageViewState extends State<RegisterPageView> {
               borderRadius: BorderRadius.all(Radius.circular(4)),
             ),
           ),
-          child: const Text(
-            'Create Account',
-            style: TextStyle(color: Colors.white),
+          child: Text(
+            "create_account_text".tr(),
+            style: const TextStyle(color: Colors.white),
           ),
         ));
   }
@@ -327,7 +327,7 @@ class _RegisterPageViewState extends State<RegisterPageView> {
             ),
           ),
           Text(
-            'OR',
+            "or".tr().toUpperCase(),
             style: TextStyle(
               color: Colors.white.withOpacity(0.5),
             ),
@@ -346,28 +346,40 @@ class _RegisterPageViewState extends State<RegisterPageView> {
 
   Widget _buildRegisterWithGoogleButton() {
     return Container(
-        margin: const EdgeInsets.only(top: 20),
-        height: 48,
-        width: double.infinity,
-        child: ElevatedButton(
-          onPressed: () {
-            print('Register with Google');
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.transparent,
-            shape: RoundedRectangleBorder(
-              borderRadius: const BorderRadius.all(Radius.circular(4)),
-              side: BorderSide(
-                color: Color(Constants.primaryColor),
-                width: 1,
-              ),
+      margin: const EdgeInsets.only(top: 20),
+      height: 48,
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: () {
+          print('Register with Google');
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.transparent,
+          shape: RoundedRectangleBorder(
+            borderRadius: const BorderRadius.all(Radius.circular(4)),
+            side: BorderSide(
+              color: Color(Constants.primaryColor),
+              width: 1,
             ),
           ),
-          child: const Text(
-            'Register with Google',
-            style: TextStyle(color: Colors.white),
-          ),
-        ));
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              'assets/images/ic_google.png',
+              width: 24,
+              height: 24,
+            ),
+            const SizedBox(width: 10),
+            Text(
+              "register_with_google_text".tr(),
+              style: const TextStyle(color: Colors.white),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildRegisterWithAppleButton() {
@@ -389,9 +401,20 @@ class _RegisterPageViewState extends State<RegisterPageView> {
               ),
             ),
           ),
-          child: const Text(
-            'Register with Apple',
-            style: TextStyle(color: Colors.white),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                'assets/images/ic_apple.png',
+                width: 24,
+                height: 24,
+              ),
+              const SizedBox(width: 10),
+              Text(
+                "register_with_apple_text".tr(),
+                style: TextStyle(color: Colors.white),
+              ),
+            ],
           ),
         ));
   }
@@ -399,13 +422,13 @@ class _RegisterPageViewState extends State<RegisterPageView> {
   Widget _buildHaveAnAccount() {
     return RichText(
         text: TextSpan(
-      text: 'Already have an account? ',
+      text: "${"already_have_an_account_text".tr()} ",
       style: TextStyle(
         color: Colors.white.withOpacity(0.5),
       ),
       children: [
         TextSpan(
-          text: 'Login',
+          text: "login_text".tr(),
           style: const TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -430,12 +453,10 @@ class _RegisterPageViewState extends State<RegisterPageView> {
 
     final isEmailValid = usernameFormKey.currentState?.validate() ?? false;
     final isPasswordValid = passwordFormKey.currentState?.validate() ?? false;
-    final isConfirmPasswordValid =
-        confirmPasswordFormKey.currentState?.validate() ?? false;
+    final isConfirmPasswordValid = confirmPasswordFormKey.currentState?.validate() ?? false;
     final isValid = isEmailValid && isPasswordValid && isConfirmPasswordValid;
 
     if (!isValid) {
-      print('Form is not valid');
       return;
     } else {
       context.read<RegisterCubit>().register(email, password);

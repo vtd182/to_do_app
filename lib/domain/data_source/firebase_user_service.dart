@@ -2,10 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class FirebaseUserService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  FirebaseUserService() {
-    print('UserFirebaseService created');
-  }
   // Get current user
   User? get currentUser => _auth.currentUser;
 
