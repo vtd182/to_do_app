@@ -9,10 +9,6 @@ class AppState extends Equatable {
 
   AppState copyWith({
     AuthenticationStatus? status,
-    List<TaskModel>? tasks,
-    List<TaskModel>? completedTasks,
-    List<TaskModel>? incompleteTasks,
-    List<CategoryModel>? categories,
   }) {
     return AppState(
       status: status ?? this.status,

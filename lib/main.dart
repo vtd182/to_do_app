@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:to_do_app/app/language_cubit.dart';
 import 'package:to_do_app/domain/authentication_repository/authentication_repository.dart';
 import 'package:to_do_app/domain/data_source/firebase_auth_service.dart';
@@ -53,7 +54,6 @@ class _AppState extends State<App> {
     );
     firebaseService = FirebaseService();
     firebaseUserService = FirebaseUserService();
-    print(firebaseUserService.hashCode);
   }
 
   @override
@@ -108,8 +108,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'My To-Do App',
       theme: ThemeData(
-        colorScheme:
-            ColorScheme.fromSeed(seedColor: Color(Constants.primaryColor)),
+        colorScheme: ColorScheme.fromSeed(seedColor: Color(Constants.primaryColor)),
         useMaterial3: true,
         fontFamily: 'Lato',
       ),
@@ -120,16 +119,17 @@ class _MyAppState extends State<MyApp> {
       routes: routes,
       builder: (context, child) {
         return BlocListener<AppCubit, AppState>(
-          listener: (context, state) {
+          listener: (context, state) async {
             switch (state.status) {
               case AuthenticationStatus.authenticated:
-                _navigatorKey.currentState
-                    ?.pushNamedAndRemoveUntil(MainPage.route, (route) => false);
+                _navigatorKey.currentState?.pushNamedAndRemoveUntil(MainPage.route, (route) => false);
                 break;
               case AuthenticationStatus.unauthenticated:
-                _navigatorKey.currentState?.pushNamedAndRemoveUntil(
-                    WelcomePage.route, (route) => false,
-                    arguments: false);
+                bool isOnboardingFinished = await _isOnboardingFinished();
+                if (isOnboardingFinished) {
+                  _navigatorKey.currentState
+                      ?.pushNamedAndRemoveUntil(WelcomePage.route, (route) => false, arguments: false);
+                }
                 break;
               case AuthenticationStatus.unknown:
                 break;
@@ -138,9 +138,18 @@ class _MyAppState extends State<MyApp> {
           child: child,
         );
       },
-      onGenerateRoute: (_) =>
-          MaterialPageRoute(builder: (context) => const SplashScreen()),
+      onGenerateRoute: (_) => MaterialPageRoute(builder: (context) => const SplashScreen()),
       debugShowCheckedModeBanner: false,
     );
+  }
+
+  Future<bool> _isOnboardingFinished() async {
+    try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final result = prefs.getBool('key_onboarding_finished');
+      return result ?? false;
+    } catch (e) {
+      return false;
+    }
   }
 }

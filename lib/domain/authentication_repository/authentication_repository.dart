@@ -32,12 +32,12 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   }) {
     firebaseAuthService.user.listen((firebaseUser) {
       final isAuthenticated = firebaseUser != null;
-      final user =
-          isAuthenticated ? firebaseUser.toUserEntity : UserEntity.empty;
+      final user = isAuthenticated ? firebaseUser.toUserEntity : UserEntity.empty;
       _userController.sink.add(user);
       if (isAuthenticated) {
         _statusController.sink.add(AuthenticationStatus.authenticated);
       } else {
+        // unknowe
         _statusController.sink.add(AuthenticationStatus.unauthenticated);
       }
     });

@@ -5,6 +5,7 @@ import 'package:to_do_app/ui/welcome/welcome_page.dart';
 import '../onboarding/onboarding_page_view.dart';
 
 class SplashScreen extends StatefulWidget {
+  static const route = '/splash';
   const SplashScreen({super.key});
 
   @override
@@ -12,6 +13,7 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  late var isRedirected = false;
   Future<void> _checkAppState(BuildContext context) async {
     // check if the key 'key_onboarding_finished' is exist
     final isOnboardingFinished = await _isOnboardingFinished();
@@ -21,6 +23,7 @@ class _SplashScreenState extends State<SplashScreen> {
       redirectToWelcomePage();
     } else {
       // if the key is not exist, navigate to the onboarding page view
+      if (isRedirected) return;
       redirectToOnboardingPageView();
     }
   }
@@ -41,7 +44,9 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void redirectToOnboardingPageView() async {
+    isRedirected = true;
     await Future.delayed(const Duration(seconds: 3));
+    print(!mounted);
     if (!mounted) return;
     Navigator.of(context).pushNamed(OnboardingPageView.route);
   }
