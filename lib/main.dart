@@ -17,19 +17,25 @@ import 'package:to_do_app/utils/enums/authentication_status.dart';
 import 'app/app_cubit.dart';
 import 'constants/constants.dart';
 import 'domain/data_source/firebase_user_service.dart';
+import 'firebase_options.dart';
 
 void main() async {
-  // init easy localization
   WidgetsFlutterBinding.ensureInitialized();
-  await EasyLocalization.ensureInitialized();
-  await Firebase.initializeApp();
 
+  // init easy localization
   runApp(EasyLocalization(
     supportedLocales: const [Locale('en'), Locale('vi')],
     path: 'assets/translations',
     fallbackLocale: const Locale('en'),
     child: const App(),
   ));
+  await EasyLocalization.ensureInitialized();
+
+  if (Firebase.apps.isEmpty) {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  }
 }
 
 class App extends StatefulWidget {
@@ -127,8 +133,7 @@ class _MyAppState extends State<MyApp> {
               case AuthenticationStatus.unauthenticated:
                 bool isOnboardingFinished = await _isOnboardingFinished();
                 if (isOnboardingFinished) {
-                  _navigatorKey.currentState
-                      ?.pushNamedAndRemoveUntil(WelcomePage.route, (route) => false, arguments: false);
+                  _navigatorKey.currentState?.pushNamedAndRemoveUntil(WelcomePage.route, (route) => false, arguments: false);
                 }
                 break;
               case AuthenticationStatus.unknown:

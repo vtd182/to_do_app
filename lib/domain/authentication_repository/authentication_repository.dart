@@ -37,7 +37,6 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       if (isAuthenticated) {
         _statusController.sink.add(AuthenticationStatus.authenticated);
       } else {
-        // unknowe
         _statusController.sink.add(AuthenticationStatus.unauthenticated);
       }
     });

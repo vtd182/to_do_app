@@ -83,7 +83,6 @@ class _OnboardingPageViewState extends State<OnboardingPageView> {
   }
 
   void _onSkipPressed() {
-    print('Skip');
     _makeOnboardingFinished();
     Navigator.of(context).pushNamed(WelcomePage.route, arguments: true);
   }

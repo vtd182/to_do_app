@@ -40,11 +40,12 @@ class _CreateTaskPageViewState extends State<CreateTaskPageView> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          color: Colors.grey.shade800,
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
-          )),
+        color: Colors.grey.shade800,
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
+        ),
+      ),
       child: SafeArea(
         child: Container(
           margin: const EdgeInsets.all(20),
