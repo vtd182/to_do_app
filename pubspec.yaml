@@ -22,12 +22,10 @@ dependencies:
 
   rxdart: ^0.27.7
   date_picker_timeline: ^1.2.6
+  flutter_local_notifications: ^17.2.4
 
   intl: any
   firebase_database: ^11.1.4
-firebase_database:^11:
-  1:
-    4:
 
 dev_dependencies:
   flutter_test:
