@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:timezone/data/latest.dart' as tz;
 import 'package:to_do_app/app/language_cubit.dart';
 import 'package:to_do_app/domain/authentication_repository/authentication_repository.dart';
 import 'package:to_do_app/domain/data_source/firebase_auth_service.dart';
@@ -21,6 +22,7 @@ import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  tz.initializeTimeZones();
 
   // init easy localization
   runApp(EasyLocalization(
