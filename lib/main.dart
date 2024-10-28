@@ -72,6 +72,9 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
       providers: [
+        RepositoryProvider<NotificationService>(
+          create: (context) => notificationService,
+        ),
         RepositoryProvider<AuthenticationRepository>(
           create: (context) => authenticationRepository,
         ),
@@ -82,13 +85,13 @@ class _AppState extends State<App> {
           create: (context) => firebaseUserService,
         ),
         RepositoryProvider<HomePageCubit>(
-          create: (context) => HomePageCubit(firebaseService: firebaseService),
+          create: (context) => HomePageCubit(
+            firebaseService: firebaseService,
+            notificationService: notificationService,
+          ),
         ),
         RepositoryProvider<LanguageCubit>(
           create: (context) => LanguageCubit(),
-        ),
-        RepositoryProvider<NotificationService>(
-          create: (context) => notificationService,
         ),
       ],
       child: BlocProvider(

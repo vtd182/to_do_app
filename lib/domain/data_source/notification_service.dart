@@ -62,5 +62,19 @@ class NotificationService {
       uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.time,
     );
+    print("Scheduled notification: $id");
+  }
+
+  Future<void> cancelNotification(int notificationId) async {
+    await _flutterLocalNotificationsPlugin.cancel(notificationId);
+  }
+
+  Future<void> cancelAllNotifications() async {
+    await _flutterLocalNotificationsPlugin.cancelAll();
+  }
+
+  //pending notification
+  Future<List<PendingNotificationRequest>> getAllPendingNotification() async {
+    return await _flutterLocalNotificationsPlugin.pendingNotificationRequests();
   }
 }

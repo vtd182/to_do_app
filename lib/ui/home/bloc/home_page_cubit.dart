@@ -4,13 +4,18 @@ import 'package:equatable/equatable.dart';
 import '../../../data/models/category.dart';
 import '../../../data/models/task.dart';
 import '../../../domain/data_source/firebase_service.dart';
+import '../../../domain/data_source/notification_service.dart';
 
 part 'home_page_state.dart';
 
 class HomePageCubit extends Cubit<HomePageState> {
   final FirebaseService firebaseService;
+  final NotificationService notificationService;
 
-  HomePageCubit({required this.firebaseService}) : super(const HomePageState()) {
+  HomePageCubit({
+    required this.firebaseService,
+    required this.notificationService,
+  }) : super(const HomePageState()) {
     _initialize();
   }
 
@@ -26,6 +31,8 @@ class HomePageCubit extends Cubit<HomePageState> {
       incompleteTasks: incompleteTasks,
       categories: categories,
     ));
+
+    checkPendingNotifications();
   }
 
   void fetchTasks() async {
@@ -44,17 +51,21 @@ class HomePageCubit extends Cubit<HomePageState> {
 
   void addTask(TaskModel task) async {
     await firebaseService.addTask(task);
-    _initialize();
+    _scheduleNotificationForTask(task); // Schedule notification only for new task
+    fetchTasks(); // Update tasks list without scheduling again
   }
 
   void updateTask(TaskModel task) async {
     await firebaseService.updateTask(task);
-    _initialize();
+    _cancelNotificationForTask(task); // Cancel previous notification if it exists
+    _scheduleNotificationForTask(task); // Schedule notification for updated task
+    fetchTasks(); // Update tasks list without scheduling again
   }
 
   void deleteTask(String taskId) async {
     await firebaseService.deleteTask(taskId);
-    _initialize();
+    notificationService.cancelNotification(taskId.hashCode); // Cancel notification for deleted task
+    fetchTasks(); // Update tasks list without scheduling again
   }
 
   void addCategory(CategoryModel category) async {
@@ -72,7 +83,7 @@ class HomePageCubit extends Cubit<HomePageState> {
     _initialize();
   }
 
-  // clear when sigout
+  // Clear data when signing out
   void clear() async {
     await firebaseService.clearAllData();
   }
@@ -94,5 +105,34 @@ class HomePageCubit extends Cubit<HomePageState> {
     emit(
       state.copyWith(completedTasksByDate: completedTasks, incompleteTasksByDate: incompleteTasks),
     );
+  }
+
+  // Schedule a notification for a task 10 minutes before its due time
+  void _scheduleNotificationForTask(TaskModel task) {
+    final now = DateTime.now();
+    final taskTime = task.dateTime!;
+    final notificationTime = taskTime.subtract(const Duration(minutes: 10));
+
+    if (notificationTime.isAfter(now)) {
+      notificationService.scheduleNotification(
+        task.id.hashCode, // Unique ID for notification
+        'Task Reminder',
+        'You have a task "${task.name}" due in 10 minutes.',
+        notificationTime,
+      );
+    }
+  }
+
+  // Cancel notification for a specific task
+  void _cancelNotificationForTask(TaskModel task) {
+    notificationService.cancelNotification(task.id.hashCode);
+  }
+
+  void checkPendingNotifications() async {
+    final pendingNotifications = await notificationService.getAllPendingNotification();
+
+    for (var pendingNotification in pendingNotifications) {
+      print('Pending notification: ${pendingNotification.id}, ${pendingNotification.title}, ${pendingNotification.body}');
+    }
   }
 }
