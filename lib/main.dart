@@ -8,6 +8,7 @@ import 'package:to_do_app/app/language_cubit.dart';
 import 'package:to_do_app/domain/authentication_repository/authentication_repository.dart';
 import 'package:to_do_app/domain/data_source/firebase_auth_service.dart';
 import 'package:to_do_app/domain/data_source/firebase_service.dart';
+import 'package:to_do_app/domain/data_source/notification_service.dart';
 import 'package:to_do_app/routes.dart';
 import 'package:to_do_app/ui/home/bloc/home_page_cubit.dart';
 import 'package:to_do_app/ui/main/main_page.dart';
@@ -24,20 +25,22 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   tz.initializeTimeZones();
 
-  // init easy localization
-  runApp(EasyLocalization(
-    supportedLocales: const [Locale('en'), Locale('vi')],
-    path: 'assets/translations',
-    fallbackLocale: const Locale('en'),
-    child: const App(),
-  ));
+  // Initialize Firebase
+  if (Firebase.apps.isEmpty) {
+    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  }
+
+  // Initialize Easy Localization
   await EasyLocalization.ensureInitialized();
 
-  if (Firebase.apps.isEmpty) {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
-  }
+  runApp(
+    EasyLocalization(
+      supportedLocales: const [Locale('en'), Locale('vi')],
+      path: 'assets/translations',
+      fallbackLocale: const Locale('en'),
+      child: const App(),
+    ),
+  );
 }
 
 class App extends StatefulWidget {
@@ -52,16 +55,17 @@ class _AppState extends State<App> {
   late final FirebaseAuthService firebaseAuthService;
   late final FirebaseService firebaseService;
   late final FirebaseUserService firebaseUserService;
+  late final NotificationService notificationService;
 
   @override
   void initState() {
     super.initState();
     firebaseAuthService = FirebaseAuthService();
-    authenticationRepository = AuthenticationRepositoryImpl(
-      firebaseAuthService: firebaseAuthService,
-    );
+    authenticationRepository = AuthenticationRepositoryImpl(firebaseAuthService: firebaseAuthService);
     firebaseService = FirebaseService();
     firebaseUserService = FirebaseUserService();
+    notificationService = NotificationService();
+    notificationService.init();
   }
 
   @override
@@ -78,24 +82,17 @@ class _AppState extends State<App> {
           create: (context) => firebaseUserService,
         ),
         RepositoryProvider<HomePageCubit>(
-          create: (context) {
-            return HomePageCubit(
-              firebaseService: firebaseService,
-            );
-          },
+          create: (context) => HomePageCubit(firebaseService: firebaseService),
         ),
         RepositoryProvider<LanguageCubit>(
-          create: (context) {
-            return LanguageCubit();
-          },
+          create: (context) => LanguageCubit(),
+        ),
+        RepositoryProvider<NotificationService>(
+          create: (context) => notificationService,
         ),
       ],
       child: BlocProvider(
-        create: (BuildContext context) {
-          return AppCubit(
-            authenticationRepository: authenticationRepository,
-          );
-        },
+        create: (BuildContext context) => AppCubit(authenticationRepository: authenticationRepository),
         child: const MyApp(),
       ),
     );
@@ -111,6 +108,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final _navigatorKey = GlobalKey<NavigatorState>();
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -136,6 +134,8 @@ class _MyAppState extends State<MyApp> {
                 bool isOnboardingFinished = await _isOnboardingFinished();
                 if (isOnboardingFinished) {
                   _navigatorKey.currentState?.pushNamedAndRemoveUntil(WelcomePage.route, (route) => false, arguments: false);
+                } else {
+                  _navigatorKey.currentState?.pushNamedAndRemoveUntil(SplashScreen.route, (route) => false);
                 }
                 break;
               case AuthenticationStatus.unknown:
@@ -151,12 +151,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<bool> _isOnboardingFinished() async {
-    try {
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      final result = prefs.getBool('key_onboarding_finished');
-      return result ?? false;
-    } catch (e) {
-      return false;
-    }
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('key_onboarding_finished') ?? false;
   }
 }
