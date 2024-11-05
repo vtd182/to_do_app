@@ -55,7 +55,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '568100634875',
     projectId: 'supertodoapp-65f94',
     databaseURL: 'https://supertodoapp-65f94-default-rtdb.firebaseio.com',
-    storageBucket: 'supertodoapp-65f94.appspot.com',
+    storageBucket: 'supertodoapp-65f94.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
@@ -64,7 +64,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '568100634875',
     projectId: 'supertodoapp-65f94',
     databaseURL: 'https://supertodoapp-65f94-default-rtdb.firebaseio.com',
-    storageBucket: 'supertodoapp-65f94.appspot.com',
+    storageBucket: 'supertodoapp-65f94.firebasestorage.app',
     iosBundleId: 'com.example.toDoApp',
   );
+
 }
